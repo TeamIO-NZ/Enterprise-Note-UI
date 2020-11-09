@@ -6,15 +6,14 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import UserService from "../services/userServices";
 import User from '../models/User';
-import App from '../App'
+import UserService from '../services/UserServices';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -65,6 +64,7 @@ export default function Login(user:User) {
         setUsername(e.target.value);
     }
   }
+  
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.value === "") {
         setPasswordValid(true);

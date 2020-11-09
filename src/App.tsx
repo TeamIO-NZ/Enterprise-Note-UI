@@ -4,16 +4,20 @@ import { Switch, Route } from 'react-router-dom';
 import MenuAppBar from './elements/MenuAppBar';
 import Login from './pages/Login';
 import user from './models/User'
-function App() {
+import Home from './pages/Home';
+import Note from './models/Note';
+
+function App(noteArray?:any) {
   const [token, setToken] = React.useState<String>("");
-  const [user, setUser] = React.useState<user>()
+  const [user, setUser] = React.useState<user>();
+  
   return (
     <React.Fragment>
       <CssBaseline />
       <MenuAppBar token={token}/>
       <Switch>
-        <Route exact path={["/", "/home"]} />
-        <Route exact path="/login" component={Login} user={user}/>
+        <Route exact path={["/", "/home"]} component={Home}/>
+        <Route exact path="/login" component={Login} user={setUser}/>
       </Switch>
     </React.Fragment>
   );

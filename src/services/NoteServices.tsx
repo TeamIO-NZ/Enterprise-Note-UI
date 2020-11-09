@@ -1,0 +1,40 @@
+import http from "./HttpCommon";
+
+
+class NoteDataService {
+  getAll() {
+    return http.get("/notes");
+  }
+  getAllUserHasAccessTo(id: number) {
+    return http.get(`/usersnotes/${id}`)
+  }
+  get(id: number) {
+    return http.get(`/note/${id}`);
+  }
+  create(data: any) {
+    return http.post("/note", data);
+  }
+
+  update(id: number, data: any) {
+    return http.put(`/note/${id}`, data);
+  }
+
+  delete(id: number) {
+    return http.delete(`/note/${id}`);
+  }
+
+  //   deleteAll() {
+  //     return http.delete(`/tutorials`);
+  //   }
+
+  // getSpecific(username: string, password: string) {
+  //   return http.get(`/login/${username}/${password}`);
+  // }
+  async getData() {
+    //console.log("Getting Data");
+    return await this.getAllUserHasAccessTo(1).then(response => {
+        return response.data;
+    });
+  };
+}
+export default new NoteDataService();
