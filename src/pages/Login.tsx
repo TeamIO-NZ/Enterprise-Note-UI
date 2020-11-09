@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import UserService from "../services/userServices";
 import User from '../models/User';
+import App from '../App'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -52,6 +53,7 @@ export default function Login(user:User) {
   
   const [username, setUsername] = React.useState<String>("");
   const [password, setPassword] = React.useState<String>("");
+  const [token, setToken] = React.useState<String>("");
   const [usernameValid, setUsernameValid] = React.useState<boolean>(false);
   const [passwordValid, setPasswordValid] = React.useState<boolean>(false);
 
@@ -76,11 +78,16 @@ export default function Login(user:User) {
     console.log(username);
     console.log(password);
     e.preventDefault();
+    processJsonResponse(username.toString(),password.toString());
+    console.log(user);
   }
   const processJsonResponse = (username: string, password: string) =>{
+    console.log("User is: " + user.name);
     UserService.login(username, password).
     then(response => {
-      var decoded = atob(response.data)
+      //console.log(response.data.data);
+      var decoded = atob(response.data.data)
+      setToken(decoded);
       if(decoded === username+password){
         user = new User(username, password, true);
         console.log("logged in as " + user.name);
