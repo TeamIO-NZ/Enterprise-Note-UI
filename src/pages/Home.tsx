@@ -3,7 +3,7 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Note from '../models/Note';
+import {Note,Notes} from '../models/Note';
 import { ListItem, ListItemText } from '@material-ui/core';
 import NoteServices from '../services/NoteServices';
 
@@ -21,52 +21,26 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-var notes: any[] = [];
-notes.push({
-  "Notes":[]
-});
 function processData() {
   var i:number = 0;
+  var notes:Notes = new Notes('MainNotes',[]); 
+
   NoteServices.getData().then(responseData => {
     responseData.forEach((element: any) => {
       //console.log(element.Title);
-//      var note = new Note(element.Id, element.Title, element.Desc, element.Content, element.Owner, element.Viewers, element.Editors);
-      notes[i]["Notes"].push({
-        "id": element.Id,
-        "title": element.Title,
-        "desc": element.Desc,
-        "content": element.Content,
-        "owner": element.Owner,
-        "viewers": element.Viewers,
-        "editors": element.Editors,
-      });
+      var note = new Note(element.Id, element.Title, element.Desc, element.Content, element.Owner, element.Viewers, element.Editors);
+      notes.notes.push(note);
     });
     //console.log(notes);
   })
+  return notes;
 };
 //TODO JOE FIX THIS FOR ME ^^
 function generate(element: React.ReactElement) {
 
-  processData();
-  console.log(notes[0]["Notes"]["id"]);
-
-  return [
-    {
-      name: "James",
-      title: "This is a title",
-      content: "this is some content"
-    },
-    {
-      name: "Joe",
-      title: "This is a another title",
-      content: "this is some content"
-    },
-    {
-      name: "Sam",
-      title: "This is the best title",
-      content: "this is some content"
-    },
-  ].map((value) =>
+  var notes = processData();
+  console.log(notes);
+  return  notes.notes.map((note) =>
     React.cloneElement(
       element,
       {
@@ -75,14 +49,32 @@ function generate(element: React.ReactElement) {
       React.cloneElement(
         <ListItemText />,
         {
-          primary: value.name,
-          secondary: value.title,
+          primary: note.title,
+          secondary: note.desc,
         }
       )
     ),
 
   );
 }
+/*
+  // return [
+  //   {
+  //     name: "James",
+  //     title: "This is a title",
+  //     content: "this is some content"
+  //   },
+  //   {
+  //     name: "Joe",
+  //     title: "This is a another title",
+  //     content: "this is some content"
+  //   },
+  //   {
+  //     name: "Sam",
+  //     title: "This is the best title",
+  //     content: "this is some content"
+  //   },
+  // ]*/ 
 export default function Home() {
   const classes = useStyles();
   const [dense] = React.useState(false);
@@ -115,7 +107,6 @@ export default function Home() {
               {
                 generate(
                   <ListItem>
-                    <ListItemText />
                   </ListItem>
                 )
               }

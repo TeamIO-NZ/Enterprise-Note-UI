@@ -5,7 +5,6 @@ import MenuAppBar from './elements/MenuAppBar';
 import Login from './pages/Login';
 import user from './models/User'
 import Home from './pages/Home';
-import Note from './models/Note';
 
 function App(noteArray?:any) {
   const [token, setToken] = React.useState<String>("");
