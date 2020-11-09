@@ -30,9 +30,9 @@ class NoteDataService {
   // getSpecific(username: string, password: string) {
   //   return http.get(`/login/${username}/${password}`);
   // }
-  async getData() {
+  async getData(userId: number) {
     //console.log("Getting Data");
-    return await this.getAllUserHasAccessTo(1).then(response => {
+    return await this.getAllUserHasAccessTo(userId).then(response => {
         return response.data;
     });
   };

@@ -84,7 +84,7 @@ export default function Login(user:User) {
   const processJsonResponse = (username: string, password: string) =>{
     console.log("User is: " + user.name);
     UserService.login(username, password).
-    then(response => {
+    then((response: any) => {
       //console.log(response.data.data);
       var decoded = atob(response.data.data)
       setToken(decoded);

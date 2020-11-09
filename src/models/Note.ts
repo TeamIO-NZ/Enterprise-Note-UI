@@ -17,15 +17,11 @@ export class Note {
     editors: number[]
 }
 
-export class Notes{
+export class Notes {
     constructor(id:string, notes:Note[]){
         this.id = id;
         this.notes = notes;
     }
     id:string;
     notes:Note[];
-}
-
-export default{
-    Note, Notes
 }

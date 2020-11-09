@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 
 
-import Note from './models/Note';
+// import Note from './models/Note';
 
 ReactDOM.render(
   <React.StrictMode>
