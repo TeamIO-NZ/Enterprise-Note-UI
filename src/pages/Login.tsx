@@ -12,7 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import UserService from "../services/userServices";
+import User from '../models/User';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login(user:User) {
   const classes = useStyles();
   
   const [username, setUsername] = React.useState<String>("");
@@ -76,7 +77,16 @@ export default function Login() {
     console.log(password);
     e.preventDefault();
   }
-
+  const processJsonResponse = (username: string, password: string) =>{
+    UserService.login(username, password).
+    then(response => {
+      var decoded = atob(response.data)
+      if(decoded === username+password){
+        user = new User(username, password, true);
+        console.log("logged in as " + user.name);
+      }
+    })
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
