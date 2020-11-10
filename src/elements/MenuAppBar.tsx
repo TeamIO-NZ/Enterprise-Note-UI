@@ -9,6 +9,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function MenuAppBar(token: any, hideLogin: boolean = false) {
+export default function MenuAppBar(token: any) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -32,6 +33,9 @@ export default function MenuAppBar(token: any, hideLogin: boolean = false) {
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  let loc = useLocation();
+  let hideLogin: boolean = (loc.pathname === "/login");
 
   const handleLogin = () => {
     token.setToken("token");
@@ -86,7 +90,7 @@ export default function MenuAppBar(token: any, hideLogin: boolean = false) {
             </div>
           )}
           {
-            hideLogin && token.token === "" && (
+            !hideLogin && token.token === "" && (
               <Button color="inherit" href="/login" onClick={handleLogin}>Login</Button>
             )
           }
