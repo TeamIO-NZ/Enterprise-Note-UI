@@ -7,16 +7,14 @@ import user from './models/User'
 import Home from './pages/Home';
 
 function App(noteArray?:any) {
-  const [token, setToken] = React.useState<String>("");
-  const [user, setUser] = React.useState<user>();
-  
+  const [token, setToken] = React.useState<String>("");  
   return (
     <React.Fragment>
       <CssBaseline />
       <MenuAppBar token={token}/>
       <Switch>
         <Route exact path={["/", "/home"]} component={Home}/>
-        <Route exact path="/login" component={Login} user={setUser}/>
+        <Route exact path="/login" component={Login}/>
       </Switch>
     </React.Fragment>
   );

@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login(user:User) {
+export default function Login() {
   const classes = useStyles();
   
   const [username, setUsername] = React.useState<String>("");
@@ -55,7 +55,7 @@ export default function Login(user:User) {
   const [token, setToken] = React.useState<String>("");
   const [usernameValid, setUsernameValid] = React.useState<boolean>(false);
   const [passwordValid, setPasswordValid] = React.useState<boolean>(false);
-
+  const [user, setUser] = React.useState<User>();
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if((/\s/g.test(e.target.value))) {
         setUsernameValid(true);
@@ -82,15 +82,15 @@ export default function Login(user:User) {
     console.log(user);
   }
   const processJsonResponse = (username: string, password: string) =>{
-    console.log("User is: " + user.name);
+    console.log("User is: " + user!.name);
     UserService.login(username, password).
     then((response: any) => {
       //console.log(response.data.data);
       var decoded = atob(response.data.data)
       setToken(decoded);
       if(decoded === username+password){
-        user = new User(username, password, true);
-        console.log("logged in as " + user.name);
+        setUser(new User(username, password, true));
+        console.log("logged in as " + user!.name);
       }
     })
   }
