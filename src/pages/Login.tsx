@@ -5,7 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
+import { Link } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -19,7 +19,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://github.com/TeamIO-NZ/EnterpriseNote">
+      <Link color="inherit" to="https://github.com/TeamIO-NZ/EnterpriseNote">
         Enterprise Note
       </Link>{' '}
       {new Date().getFullYear()}
@@ -55,46 +55,46 @@ export default function Login() {
   // const [token, setToken] = React.useState<string>("");
   const [usernameInvalid, setUsernameInvalid] = React.useState<boolean>(false);
   const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);
-  const {user, setUser} = useUser();
+  const { user, setUser } = useUser();
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if((/\s/g.test(e.target.value))) {
-        setUsernameInvalid(true);
+    if ((/\s/g.test(e.target.value))) {
+      setUsernameInvalid(true);
     } else {
-        setUsernameInvalid(false);
-        user.name = e.target.value;
+      setUsernameInvalid(false);
+      user.name = e.target.value;
     }
   }
-  
+
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(e.target.value === "") {
-        setPasswordInvalid(true);
-        console.log("invalid password")
+    if (e.target.value === "") {
+      setPasswordInvalid(true);
+      console.log("invalid password")
 
     } else {
-        setPasswordInvalid(false);
-        user.password = e.target.value;
-        console.log("setting password in user to: " + user.password)
+      setPasswordInvalid(false);
+      user.password = e.target.value;
+      console.log("setting password in user to: " + user.password)
     }
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
- 
+
     e.preventDefault();
-    processJsonResponse(user.name,user.password);
+    processJsonResponse(user.name, user.password);
     console.log(user.name);
     console.log(user.password);
   }
-  const processJsonResponse = (username: string, password: string) =>{
+  const processJsonResponse = (username: string, password: string) => {
     UserService.login(username, password).
-    then((response: any) => {
-      //console.log(response.data.data);
-      var token = response.data.data;
-      var decoded = atob(response.data.data)
-      if(decoded === username+password){
-        setUser(new User(user.name, user.password, true, token));
-      }
-    })
+      then((response: any) => {
+        //console.log(response.data.data);
+        var token = response.data.data;
+        var decoded = atob(response.data.data)
+        if (decoded === username + password) {
+          setUser(new User(user.name, user.password, true, token));
+        }
+      })
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -137,6 +137,7 @@ export default function Login() {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
+
           <Button
             type="submit"
             fullWidth
@@ -145,10 +146,11 @@ export default function Login() {
             disabled={usernameInvalid && passwordInvalid}
             className={classes.submit}
             onClick={handleSubmit}
-            href="/home"
           >
-            Login
+            <Link to="/home">Login</Link>
+
           </Button>
+
         </form>
       </div>
       <Box mt={8}>
