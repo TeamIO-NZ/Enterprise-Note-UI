@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import User from '../models/User';
 import UserService from '../services/UserServices';
+import { useUser } from '../services/Context';
 
 function Copyright() {
   return (
@@ -49,48 +50,49 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
   const classes = useStyles();
-  
-  const [username, setUsername] = React.useState<String>("");
-  const [password, setPassword] = React.useState<String>("");
-  const [token, setToken] = React.useState<String>("");
-  const [usernameValid, setUsernameValid] = React.useState<boolean>(false);
-  const [passwordValid, setPasswordValid] = React.useState<boolean>(false);
-  const [user, setUser] = React.useState<User>();
+  // const [username, setUsername] = React.useState<string>("");
+  // const [password, setPassword] = React.useState<string>("");
+  // const [token, setToken] = React.useState<string>("");
+  const [usernameInvalid, setUsernameInvalid] = React.useState<boolean>(false);
+  const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);
+  const {user, setUser} = useUser();
+
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if((/\s/g.test(e.target.value))) {
-        setUsernameValid(true);
+        setUsernameInvalid(true);
     } else {
-        setUsernameValid(false);
-        setUsername(e.target.value);
+        setUsernameInvalid(false);
+        user.name = e.target.value;
     }
   }
   
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     if(e.target.value === "") {
-        setPasswordValid(true);
+        setPasswordInvalid(true);
+        console.log("invalid password")
+
     } else {
-        setPasswordValid(false);
-        setPassword(e.target.value);
+        setPasswordInvalid(false);
+        user.password = e.target.value;
+        console.log("setting password in user to: " + user.password)
     }
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
-    console.log(username);
-    console.log(password);
+ 
     e.preventDefault();
-    processJsonResponse(username.toString(),password.toString());
-    console.log(user);
+    processJsonResponse(user.name,user.password);
+    console.log(user.name);
+    console.log(user.password);
   }
   const processJsonResponse = (username: string, password: string) =>{
-    console.log("User is: " + user!.name);
     UserService.login(username, password).
     then((response: any) => {
       //console.log(response.data.data);
+      var token = response.data.data;
       var decoded = atob(response.data.data)
-      setToken(decoded);
       if(decoded === username+password){
-        setUser(new User(username, password, true));
-        console.log("logged in as " + user!.name);
+        setUser(new User(user.name, user.password, true, token));
       }
     })
   }
@@ -114,7 +116,7 @@ export default function Login() {
             label="Username"
             name="username"
             autoComplete="username"
-            error={usernameValid}
+            error={usernameInvalid}
             onChange={handleUsername}
             autoFocus
           />
@@ -127,7 +129,7 @@ export default function Login() {
             label="Password"
             type="password"
             id="password"
-            error={passwordValid}
+            error={passwordInvalid}
             autoComplete="current-password"
             onChange={handlePassword}
           />
@@ -140,9 +142,10 @@ export default function Login() {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={usernameValid && passwordValid}
+            disabled={usernameInvalid && passwordInvalid}
             className={classes.submit}
             onClick={handleSubmit}
+            href="/home"
           >
             Login
           </Button>
