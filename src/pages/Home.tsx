@@ -53,7 +53,7 @@ export default function Home() {
   useEffect(() => {
     console.log("Home Level User:");
     console.log(user);
-    NoteServices.getData(2)
+    NoteServices.getData(user.id)
       .then(data => {
         var n: Array<Note> = [];
         if (data === undefined || data === null) return [];

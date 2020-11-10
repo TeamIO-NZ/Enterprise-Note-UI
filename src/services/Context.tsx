@@ -7,7 +7,7 @@ export type UserContextType = {
     setUser:(User:User) => void;
 }
 export const UserContext = createContext<UserContextType>({
-    user: new User("","",false,""),
+    user: new User("","",false,"","","",-1),
     setUser: (User:User)  => console.warn('No User Provider')
 });
 

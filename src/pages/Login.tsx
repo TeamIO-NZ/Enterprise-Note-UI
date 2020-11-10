@@ -88,11 +88,13 @@ export default function Login() {
   const processJsonResponse = (username: string, password: string) => {
     UserService.login(username, password).
       then((response: any) => {
-        //console.log(response.data.data);
-        var token = response.data.data;
-        var decoded = atob(response.data.data)
+        console.log(response.data.data);
+        var userInfo = response.data.data;
+        var token = userInfo.Token;
+        console.log(token);
+        var decoded = atob(userInfo.Token)
         if (decoded === username + password) {
-          setUser(new User(user.name, user.password, true, token));
+          setUser(new User(userInfo.name, userInfo.Password, true, userInfo.Token,userInfo.Email,userInfo.Gender,userInfo.ID));
         }
       })
   }

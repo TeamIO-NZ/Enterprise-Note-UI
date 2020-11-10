@@ -10,7 +10,7 @@ import { UserContext } from './services/Context';
 function App() {
 
   const [token, setToken] = React.useState<String>("");
-  const [user, setUser] = React.useState<User>(new User("", "", false, ""));
+  const [user, setUser] = React.useState<User>(new User("", "", false, "","","",-1));
   console.log("App Level User:");
   console.log(user);
   return (
