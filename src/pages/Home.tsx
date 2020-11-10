@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import { Note, Notes } from '../models/Note';
 import { ListItem, ListItemText } from '@material-ui/core';
 import NoteServices from '../services/NoteServices';
+import { useUser } from '../services/Context';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -46,11 +47,13 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [dense] = React.useState(false);
-
+  const {user, setUser} = useUser();
 
 
   useEffect(() => {
-    NoteServices.getData(2)
+    console.log("Home Level User:");
+    console.log(user);
+    NoteServices.getData(user.id)
       .then(data => {
         var n: Array<Note> = [];
         if (data === undefined || data === null) return [];
