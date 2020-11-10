@@ -1,4 +1,5 @@
 import http from "./HttpCommon";
+
 class UserDataService{
     getAll() {
         return http.get("/users");

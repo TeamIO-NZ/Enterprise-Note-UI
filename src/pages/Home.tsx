@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
       maxWidth: 500,
+      marginLeft: 40
     },
     demo: {
       backgroundColor: theme.palette.background.paper,
@@ -74,7 +75,7 @@ export default function Home() {
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <Typography variant="h6" className={classes.title}>
-              Text only
+              Your Notes
                   </Typography>
             <div className={classes.demo}>
               <List dense={dense}>
