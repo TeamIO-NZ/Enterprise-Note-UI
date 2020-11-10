@@ -8,8 +8,6 @@ import Home from './pages/Home';
 import { UserContext } from './services/Context';
 
 function App() {
-
-  const [token, setToken] = React.useState<String>("");
   const [user, setUser] = React.useState<User>(new User("", "", false, "","","",-1));
   console.log("App Level User:");
   console.log(user);
@@ -17,7 +15,7 @@ function App() {
     <UserContext.Provider value={{ user, setUser }}>
       <React.Fragment>
         <CssBaseline />
-        <MenuAppBar token={token} />
+        <MenuAppBar />
         <Switch>
           <Route exact path={["/", "/home"]} component={Home}> 
           <Home/>

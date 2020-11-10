@@ -9,7 +9,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { Avatar } from '@material-ui/core';
+import { useUser } from '../services/Context';
+import User from '../models/User';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,7 +28,9 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function MenuAppBar(token: any) {
+export default function MenuAppBar() {
+  const { user, setUser } = useUser();
+  const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -38,11 +43,12 @@ export default function MenuAppBar(token: any) {
   let hideLogin: boolean = (loc.pathname === "/login");
 
   const handleLogin = () => {
-    token.setToken("token");
+    history.push("/login");
   }
 
   const handleLogout = () => {
-    token.setToken(""); // clear login token
+    setUser(new User("", "", false, "","","",-1));
+    history.push("/login");
   }
 
   const handleClose = () => {
@@ -58,17 +64,16 @@ export default function MenuAppBar(token: any) {
           <Typography variant="h6" className={classes.title}>
             Enterprise Note
           </Typography>
-          {token.token !== "" && (
+          {user.token !== "" && (
             <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
+              <Avatar
+              aria-label={`account of ${user.name}`}
+              aria-controls="menu-appbar"
+              aria-aria-haspopup="true"
+              onClick={handleMenu}
               >
-                <AccountCircle />
-              </IconButton>
+                {user.name.charAt(0).toUpperCase()}
+              </Avatar>
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -90,8 +95,8 @@ export default function MenuAppBar(token: any) {
             </div>
           )}
           {
-            !hideLogin && token.token === "" && (
-              <Button color="inherit" href="/login" onClick={handleLogin}>Login</Button>
+            !hideLogin && user.token === "" && (
+              <Button color="inherit" onClick={handleLogin && handleClose}>Login</Button>
             )
           }
         </Toolbar>

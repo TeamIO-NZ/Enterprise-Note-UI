@@ -5,7 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
@@ -56,6 +56,7 @@ export default function Login() {
   const [usernameInvalid, setUsernameInvalid] = React.useState<boolean>(false);
   const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);
   const { user, setUser } = useUser();
+  const history = useHistory();
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if ((/\s/g.test(e.target.value))) {
@@ -74,7 +75,7 @@ export default function Login() {
     } else {
       setPasswordInvalid(false);
       user.password = e.target.value;
-      console.log("setting password in user to: " + user.password)
+    //  console.log("setting password in user to: " + user.password)
     }
   }
 
@@ -83,18 +84,19 @@ export default function Login() {
     e.preventDefault();
     processJsonResponse(user.name, user.password);
     console.log(user.name);
-    console.log(user.password);
+   // console.log(user.password);
   }
   const processJsonResponse = (username: string, password: string) => {
     UserService.login(username, password).
       then((response: any) => {
-        console.log(response.data.data);
+        //console.log(response.data.data);
         var userInfo = response.data.data;
         var token = userInfo.Token;
         console.log(token);
         var decoded = atob(userInfo.Token)
         if (decoded === username + password) {
           setUser(new User(userInfo.name, userInfo.Password, true, userInfo.Token,userInfo.Email,userInfo.Gender,userInfo.ID));
+          history.push("/");
         }
       })
   }
@@ -149,7 +151,7 @@ export default function Login() {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            <Link to="/home">Login</Link>
+            Login
 
           </Button>
 
