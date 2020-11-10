@@ -3,11 +3,11 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { Note, Notes } from '../models/Note';
+import { Note } from '../models/Note';
 import { ListItem, ListItemText } from '@material-ui/core';
 import NoteServices from '../services/NoteServices';
 import { useUser } from '../services/Context';
-
+import {Redirect} from 'react-router-dom';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -30,6 +30,9 @@ function generate(element: React.ReactElement, notes: Array<Note>) {
       element,
       {
         key: note.id,
+        onClick: function() {
+           console.log("TEST");
+          }
       },
       React.cloneElement(
         <ListItemText />,
@@ -51,8 +54,8 @@ export default function Home() {
 
 
   useEffect(() => {
-    console.log("Home Level User:");
-    console.log(user);
+    // console.log("Home Level User:");
+    // console.log(user);
     NoteServices.getData(user.id)
       .then(data => {
         var n: Array<Note> = [];
@@ -69,7 +72,9 @@ export default function Home() {
         }
       )
   }, []);
-
+  if(!user.loggedIn){
+    return <Redirect to="/login" />
+  }
   if (!isLoaded) {
     return <div>Loading...</div>
   } else {

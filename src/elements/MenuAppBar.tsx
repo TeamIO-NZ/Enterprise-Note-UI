@@ -5,7 +5,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -69,7 +68,6 @@ export default function MenuAppBar() {
               <Avatar
               aria-label={`account of ${user.name}`}
               aria-controls="menu-appbar"
-              aria-aria-haspopup="true"
               onClick={handleMenu}
               >
                 {user.name.charAt(0).toUpperCase()}
