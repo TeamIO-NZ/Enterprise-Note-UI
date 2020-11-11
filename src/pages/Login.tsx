@@ -55,7 +55,11 @@ export default function Login() {
   const { user, setUser } = useUser();
   const history = useHistory();
 
-  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+  if(user.id != -1) {
+    history.push("/");
+  }
+
+   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if ((/\s/g.test(e.target.value))) {
       setUsernameInvalid(true);
     } else {
