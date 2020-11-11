@@ -4,13 +4,13 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Note } from '../models/Note';
-import { AccordionDetails, ListItem } from '@material-ui/core';
+import { AccordionActions, AccordionDetails, Button, Divider, IconButton, ListItem, Tooltip } from '@material-ui/core';
 import NoteServices from '../services/NoteServices';
 import { useUser } from '../services/Context';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Accordion from '@material-ui/core/Accordion/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary/AccordionSummary';
-import { ExpandMore } from '@material-ui/icons';
+import { Delete, Edit, ExpandMore } from '@material-ui/icons';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
@@ -18,11 +18,8 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      maxWidth: 500,
       marginLeft: 40
-    },
-    demo: {
-      backgroundColor: theme.palette.background.paper,
+
     },
     title: {
       margin: theme.spacing(4, 0, 2),
@@ -36,20 +33,20 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: theme.typography.pxToRem(15),
       color: theme.palette.text.secondary,
     },
-    listRoot: {
+    item: {
       width: '100%'
     }
   }),
 );
 
-function generate(element: React.ReactElement, notes: Array<Note>, {expanded, handleExpand, classes}: {expanded: string | boolean, handleExpand: any, classes: any}) {
+function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes }: { expanded: string | boolean, handleExpand: any, classes: any }) {
   return notes.map((note: Note, index: number) =>
     React.cloneElement(
       element,
       {
         key: note.id
       },
-      <Accordion expanded={expanded === `panel${note.id}`} onChange={handleExpand(`panel${note.id}`)}>
+      <Accordion className={classes.item} expanded={expanded === `panel${note.id}`} onChange={handleExpand(`panel${note.id}`)}>
         <AccordionSummary
           expandIcon={<ExpandMore />}
           aria-controls={`panel${note.id}bh-content`}
@@ -58,8 +55,13 @@ function generate(element: React.ReactElement, notes: Array<Note>, {expanded, ha
           <Typography className={classes.heading}>{note.title}</Typography>
           <Typography className={classes.secondaryHeading}>{note.desc}</Typography>
         </AccordionSummary>
+        <AccordionActions>
+          <Tooltip title={"Delete Note"}><IconButton size="small"><Delete /></IconButton></Tooltip>
+          <Tooltip title={"Edit Note"}><IconButton size="small"><Edit /></IconButton></Tooltip>
+        </AccordionActions>
+        <Divider />
         <AccordionDetails>
-          <ReactMarkdown plugins={[gfm]} children={decodeURIComponent(note.content)}/>
+          <ReactMarkdown plugins={[gfm]} children={decodeURIComponent(note.content)} />
         </AccordionDetails>
       </Accordion>
     ),
@@ -71,7 +73,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [dense] = React.useState(false);
-  const {user} = useUser();
+  const { user } = useUser();
 
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -98,7 +100,7 @@ export default function Home() {
         }
       )
   }, []);
-  if(!user.loggedIn){
+  if (!user.loggedIn) {
     return <Redirect to="/login" />
   }
   if (!isLoaded) {
@@ -106,27 +108,34 @@ export default function Home() {
   } else {
     return (
       <div className={classes.root}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={12}>
+        <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="center"
+          alignItems="center"
+        >
+          <Grid item xs={12} md={6}>
             <Typography variant="h6" className={classes.title}>
               Your Notes
             </Typography>
-            <div className={classes.demo}>
-              <List dense={dense} className={classes.listRoot}>
-                {
-                  generate(
-                    <ListItem>
-                    </ListItem>,
-                    notes,
-                    {
-                      expanded, 
-                      handleExpand,
-                      classes
-                    }
-                  )
-                }
-              </List>
-            </div>
+            <List dense={dense}>
+              {
+                generate(
+                  <ListItem>
+                  </ListItem>,
+                  notes,
+                  {
+                    expanded,
+                    handleExpand,
+                    classes
+                  }
+                )
+              }
+            </List>
+          </Grid>
+          <Grid item xs={12} md={6}>
+
           </Grid>
         </Grid>
       </div>
