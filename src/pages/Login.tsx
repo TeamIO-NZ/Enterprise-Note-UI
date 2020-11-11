@@ -15,19 +15,9 @@ import User from '../models/User';
 import UserService from '../services/UserServices';
 import { useUser } from '../services/Context';
 import { Grid } from '@material-ui/core';
+import Copyright from '../elements/Copyright';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" to="https://github.com/TeamIO-NZ/EnterpriseNote">
-        Enterprise Note
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
