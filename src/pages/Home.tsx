@@ -1,13 +1,21 @@
+/// <reference path="../../.types/remark-twemoji.d.ts" />
+
 import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Note } from '../models/Note';
-import { ListItem, ListItemText } from '@material-ui/core';
+import { AccordionDetails, ListItem } from '@material-ui/core';
 import NoteServices from '../services/NoteServices';
 import { useUser } from '../services/Context';
 import {Redirect} from 'react-router-dom';
+import Accordion from '@material-ui/core/Accordion/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary/AccordionSummary';
+import { ExpandMore } from '@material-ui/icons';
+import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -21,26 +29,41 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       margin: theme.spacing(4, 0, 2),
     },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      flexBasis: '33.33%',
+      flexShrink: 0,
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary,
+    },
+    listRoot: {
+      width: '100%'
+    }
   }),
 );
 
-function generate(element: React.ReactElement, notes: Array<Note>) {
+function generate(element: React.ReactElement, notes: Array<Note>, {expanded, handleExpand, classes}: {expanded: string | boolean, handleExpand: any, classes: any}) {
   return notes.map((note: Note, index: number) =>
     React.cloneElement(
       element,
       {
-        key: note.id,
-        onClick: function() {
-           console.log("TEST");
-          }
+        key: note.id
       },
-      React.cloneElement(
-        <ListItemText />,
-        {
-          primary: note.title,
-          secondary: note.desc,
-        }
-      )
+      <Accordion expanded={expanded === `panel${note.id}`} onChange={handleExpand(`panel${note.id}`)}>
+        <AccordionSummary
+          expandIcon={<ExpandMore />}
+          aria-controls={`panel${note.id}bh-content`}
+          id={`panel${note.id}bh-header`}
+        >
+          <Typography className={classes.heading}>{note.title}</Typography>
+          <Typography className={classes.secondaryHeading}>{note.desc}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <ReactMarkdown plugins={[gfm]} children={decodeURIComponent(note.content)}/>
+        </AccordionDetails>
+      </Accordion>
     ),
   );
 }
@@ -50,12 +73,17 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [dense] = React.useState(false);
-  const {user, setUser} = useUser();
+  const {user} = useUser();
+
+  const [expanded, setExpanded] = React.useState<string | false>(false);
+
+  const handleExpand = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
 
   useEffect(() => {
-    // console.log("Home Level User:");
-    // console.log(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     NoteServices.getData(user.id)
       .then(data => {
         var n: Array<Note> = [];
@@ -67,8 +95,8 @@ export default function Home() {
       })
       .then(
         (notes: Array<Note>) => {
-          setNotes(notes);
-          setIsLoaded(true);
+          setNotes(notes);   // For these two react freaks
+          setIsLoaded(true); //  out about a menory leak, idk why ~Joe
         }
       )
   }, []);
@@ -84,14 +112,19 @@ export default function Home() {
           <Grid item xs={12} md={6}>
             <Typography variant="h6" className={classes.title}>
               Your Notes
-                  </Typography>
+            </Typography>
             <div className={classes.demo}>
-              <List dense={dense}>
+              <List dense={dense} className={classes.listRoot}>
                 {
                   generate(
                     <ListItem>
                     </ListItem>,
-                    notes
+                    notes,
+                    {
+                      expanded, 
+                      handleExpand,
+                      classes
+                    }
                   )
                 }
               </List>

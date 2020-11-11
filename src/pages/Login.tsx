@@ -50,9 +50,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
   const classes = useStyles();
-  // const [username, setUsername] = React.useState<string>("");
-  // const [password, setPassword] = React.useState<string>("");
-  // const [token, setToken] = React.useState<string>("");
   const [usernameInvalid, setUsernameInvalid] = React.useState<boolean>(false);
   const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);
   const { user, setUser } = useUser();
@@ -63,7 +60,7 @@ export default function Login() {
       setUsernameInvalid(true);
     } else {
       setUsernameInvalid(false);
-      user.name = e.target.value;
+      user.name = e.target.value.toLowerCase();
     }
   }
 
@@ -87,8 +84,8 @@ export default function Login() {
    // console.log(user.password);
   }
   const processJsonResponse = (username: string, password: string) => {
-    UserService.login(username, password).
-      then((response: any) => {
+    UserService.login(username, password)
+    .then((response: any) => {
         //console.log(response.data.data);
         var userInfo = response.data.data;
         var token = userInfo.Token;
