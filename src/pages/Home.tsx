@@ -1,5 +1,3 @@
-/// <reference path="../../.types/remark-twemoji.d.ts" />
-
 import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -109,7 +107,7 @@ export default function Home() {
     return (
       <div className={classes.root}>
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={12}>
             <Typography variant="h6" className={classes.title}>
               Your Notes
             </Typography>
