@@ -95,8 +95,8 @@ export default function Home() {
       })
       .then(
         (notes: Array<Note>) => {
-          setNotes(notes);   // For these two react freaks
-          setIsLoaded(true); //  out about a menory leak, idk why ~Joe
+          setNotes(notes);
+          setIsLoaded(true);
         }
       )
   }, []);
