@@ -56,7 +56,7 @@ export default function Register() {
   const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);
   const [passwordRepeatInvalid, setPasswordRepeatInvalid] = React.useState<boolean>(false);
   const [waiting, setWaiting] = React.useState<boolean>(false);
-  const user = new User("", "", false, "", "", "", -1);
+  const { user } = useUser();
   const history = useHistory();
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let pass = "";
@@ -102,19 +102,23 @@ export default function Register() {
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
-
+    processJsonResponse();
     setWaiting(true);
     setTimeout(() => {
       setWaiting(false);
     }, 5000);
     e.preventDefault();
-    //     processJsonResponse(user.name, user.password);
-    //     console.log(user.name);
-    //    // console.log(user.password);
+
   }
   const processJsonResponse = () => {
+    //TODO THIS TECHNICALLY WORKS SO IF YOU CONNECT VALIDATED VALUES TO IT THIS SHOULD BE DONE
+    user.name = "james";
+    user.password = "1234";
+    user.email = "james@meme.com";
+    console.log(user);
     UserService.create(user)
       .then((response: any) => {
+        console.log(response)
         //UserService.getByName()
         console.log("hee hoo ")
       })
