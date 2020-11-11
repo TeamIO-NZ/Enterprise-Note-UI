@@ -39,7 +39,7 @@ export default function MenuAppBar() {
   };
 
   let loc = useLocation();
-  let hideLogin: boolean = (loc.pathname === "/login");
+  let hideLogin: boolean = (loc.pathname === "/login" || loc.pathname === "/register");
 
   const handleLogin = () => {
     history.push("/login");

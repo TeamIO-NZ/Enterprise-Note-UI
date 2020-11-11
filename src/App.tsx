@@ -6,9 +6,10 @@ import Login from './pages/Login';
 import User from './models/User'
 import Home from './pages/Home';
 import { UserContext } from './services/Context';
+import Register from './pages/Register';
 
 function App() {
-  const [user, setUser] = React.useState<User>(new User("", "", false, "","","",-1));
+  const [user, setUser] = React.useState<User>(new User("", "", false, "", "", "", -1));
   console.log("App Level User:");
   console.log(user);
   return (
@@ -17,12 +18,15 @@ function App() {
         <CssBaseline />
         <MenuAppBar />
         <Switch>
-          <Route exact path={["/", "/home"]} component={Home}> 
-          <Home/>
+          <Route exact path={["/", "/home"]} component={Home}>
+            <Home />
           </Route>
           <Route exact path="/login" component={Login}>
             <Login />
-            </Route>
+          </Route>
+          <Route exact path="/register" component={Register} >
+            <Register />
+          </Route>
         </Switch>
       </React.Fragment>
     </UserContext.Provider>

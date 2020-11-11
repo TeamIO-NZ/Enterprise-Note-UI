@@ -14,7 +14,7 @@ import Container from '@material-ui/core/Container';
 import User from '../models/User';
 import UserService from '../services/UserServices';
 import { useUser } from '../services/Context';
-import { Grid } from '@material-ui/core';
+import { CircularProgress, Grid, LinearProgress } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -49,23 +49,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Register() {
   const classes = useStyles();
   const [usernameInvalid, setUsernameInvalid] = React.useState<boolean>(false);
+  const [emailInvalid, setEmailInvalid] = React.useState<boolean>(false);
   const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);
-  const { user, setUser } = useUser();
+  const [passwordRepeatInvalid, setPasswordRepeatInvalid] = React.useState<boolean>(false);
+  const [waiting, setWaiting] = React.useState<boolean>(false);
+  const user = new User("", "", false, "", "", "", -1);
   const history = useHistory();
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    let pass = "";
 
-  if(user.id != -1) {
-    history.push("/");
+
+  if (user.id !== -1) {
+    history.push("/"); // prevent logged in users from registering.
   }
 
-   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if ((/\s/g.test(e.target.value))) {
       setUsernameInvalid(true);
     } else {
       setUsernameInvalid(false);
-      user.name = e.target.value.toLowerCase();
+    }
+  }
+
+  const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if ((re.test(e.target.value))) {
+      setEmailInvalid(false);
+    } else {
+      setEmailInvalid(true);
     }
   }
 
@@ -76,30 +89,34 @@ export default function Login() {
 
     } else {
       setPasswordInvalid(false);
-      user.password = e.target.value;
-    //  console.log("setting password in user to: " + user.password)
+      //  console.log("setting password in user to: " + user.password)
+    }
+  }
+
+  const handleRepeatPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "" || (e.target.value === pass && pass !== "")) {
+      setPasswordRepeatInvalid(true);
+    } else {
+      setPasswordInvalid(false);
     }
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
 
+    setWaiting(true);
+    setTimeout(() => {
+      setWaiting(false);
+    }, 5000);
     e.preventDefault();
-    processJsonResponse(user.name, user.password);
-    console.log(user.name);
-   // console.log(user.password);
+    //     processJsonResponse(user.name, user.password);
+    //     console.log(user.name);
+    //    // console.log(user.password);
   }
-  const processJsonResponse = (username: string, password: string) => {
-    UserService.login(username, password)
-    .then((response: any) => {
-        //console.log(response.data.data);
-        var userInfo = response.data.data;
-        var token = userInfo.Token;
-        console.log(token);
-        var decoded = atob(userInfo.Token)
-        if (decoded === username + password) {
-          setUser(new User(userInfo.name, userInfo.Password, true, userInfo.Token,userInfo.Email,userInfo.Gender,userInfo.ID));
-          history.push("/");
-        }
+  const processJsonResponse = () => {
+    UserService.create(user)
+      .then((response: any) => {
+        //UserService.getByName()
+        console.log("hee hoo ")
       })
   }
   return (
@@ -110,7 +127,7 @@ export default function Login() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Login
+          Register
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -124,6 +141,22 @@ export default function Login() {
             autoComplete="username"
             error={usernameInvalid}
             onChange={handleUsername}
+            disabled={waiting}
+            autoFocus
+          />
+
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
+            error={emailInvalid}
+            onChange={handleEmail}
+            disabled={waiting}
             autoFocus
           />
           <TextField
@@ -138,6 +171,21 @@ export default function Login() {
             error={passwordInvalid}
             autoComplete="current-password"
             onChange={handlePassword}
+            disabled={waiting}
+          />
+
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="repeat-password"
+            label="Repeat Password"
+            type="password"
+            id="repeat-password"
+            error={passwordInvalid}
+            onChange={handlePassword}
+            disabled={waiting}
           />
 
           <Button
@@ -145,23 +193,25 @@ export default function Login() {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={usernameInvalid && passwordInvalid}
+            disabled={usernameInvalid || passwordInvalid || waiting}
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Login
+            {
+              waiting ? <CircularProgress size={25} /> : "Register"
+            }
 
           </Button>
 
         </form>
         <Grid container>
-            <Grid item xs></Grid>
-            <Grid item>
-              <Link to="/register">
-                {"Don't have an account? Register"}
-              </Link>
-            </Grid>
+          <Grid item xs></Grid>
+          <Grid item>
+            <Link to="/login">
+              {"Already have an account? Login"}
+            </Link>
           </Grid>
+        </Grid>
       </div>
       <Box mt={8}>
         <Copyright />
