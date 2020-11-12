@@ -32,5 +32,12 @@ class UserDataService {
   login(username: string, password: string) {
     return http.get(`/login/${username}/${password}`);
   }
+  async getData() {
+    console.log("Getting Data");
+    return await this.getAll().then(response => {
+      console.log(response);
+        return response.data;
+    });
+  };
 }
 export default new UserDataService();
