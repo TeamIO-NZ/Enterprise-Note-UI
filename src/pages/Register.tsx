@@ -39,15 +39,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Register() {
   const classes = useStyles();
+
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
+
   const [usernameInvalid, setUsernameInvalid] = React.useState<boolean>(false);
   const [emailInvalid, setEmailInvalid] = React.useState<boolean>(false);
   const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);
   const [passwordRepeatInvalid, setPasswordRepeatInvalid] = React.useState<boolean>(false);
   const [waiting, setWaiting] = React.useState<boolean>(false);
-  const { user } = useUser();
+
+  const { user, setUser } = useUser();
   const history = useHistory();
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    let pass = "";
+  let pass = "";
 
 
   if (user.id !== -1) {
@@ -55,16 +61,34 @@ export default function Register() {
   }
 
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if ((/\s/g.test(e.target.value))) {
-      setUsernameInvalid(true);
+    if (!(/\s/g.test(e.target.value)) && e.target.value !== "") { // valid name
+      let name = e.target.value.toLowerCase();
+      UserService.getByName(name)
+        .then((res) => {
+          if (res.data.name === "") { // user not in use
+            setUsername(name);
+            setUsernameInvalid(false);
+          } else {
+            setUsernameInvalid(true);
+          }
+        });
     } else {
-      setUsernameInvalid(false);
+      setUsernameInvalid(true);
     }
   }
 
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     if ((re.test(e.target.value))) {
-      setEmailInvalid(false);
+      let email = e.target.value.toLowerCase();
+      UserService.getByEmail(email)
+        .then((res) => {
+          if (res.data.email === "") {
+            setEmail(email);
+            setEmailInvalid(false);
+          } else {
+            setEmailInvalid(true);
+          }
+        });
     } else {
       setEmailInvalid(true);
     }
@@ -77,6 +101,7 @@ export default function Register() {
 
     } else {
       setPasswordInvalid(false);
+      setPassword(e.target.value);
       //  console.log("setting password in user to: " + user.password)
     }
   }
@@ -90,27 +115,25 @@ export default function Register() {
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
-    processJsonResponse();
     setWaiting(true);
-    setTimeout(() => {
-      setWaiting(false);
-    }, 5000);
-    e.preventDefault();
 
-  }
-  const processJsonResponse = () => {
-    //TODO THIS TECHNICALLY WORKS SO IF YOU CONNECT VALIDATED VALUES TO IT THIS SHOULD BE DONE
-    user.name = "james";
-    user.password = "1234";
-    user.email = "james@meme.com";
-    console.log(user);
     UserService.create(user)
       .then((response: any) => {
-        console.log(response)
-        //UserService.getByName()
-        console.log("hee hoo ")
+        UserService.login(username, password)
+          .then((response: any) => {
+            var userInfo = response.data.data;
+            var token = userInfo.token;
+            console.log(token);
+            var decoded = atob(userInfo.token)
+            if (decoded === username + password) {
+              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId));
+              history.push("/");
+            }
+          })
       })
+    e.preventDefault();
   }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -130,13 +153,11 @@ export default function Register() {
             id="username"
             label="Username"
             name="username"
-            autoComplete="username"
             error={usernameInvalid}
             onChange={handleUsername}
             disabled={waiting}
             autoFocus
           />
-
           <TextField
             variant="outlined"
             margin="normal"
@@ -145,7 +166,6 @@ export default function Register() {
             id="email"
             label="Email"
             name="email"
-            autoComplete="email"
             error={emailInvalid}
             onChange={handleEmail}
             disabled={waiting}
@@ -161,7 +181,6 @@ export default function Register() {
             type="password"
             id="password"
             error={passwordInvalid}
-            autoComplete="current-password"
             onChange={handlePassword}
             disabled={waiting}
           />
@@ -175,8 +194,8 @@ export default function Register() {
             label="Repeat Password"
             type="password"
             id="repeat-password"
-            error={passwordInvalid}
-            onChange={handlePassword}
+            error={passwordRepeatInvalid}
+            onChange={handleRepeatPassword}
             disabled={waiting}
           />
 
