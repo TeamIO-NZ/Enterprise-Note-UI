@@ -7,6 +7,7 @@ import User from './models/User'
 import Home from './pages/Home';
 import { UserContext } from './services/Context';
 import Register from './pages/Register';
+import ConnectionWarning from './elements/ConnectionWarning';
 
 function App() {
   const [user, setUser] = React.useState<User>(new User("", "", false, "", "", "", -1));
@@ -17,6 +18,7 @@ function App() {
       <React.Fragment>
         <CssBaseline />
         <MenuAppBar />
+        <ConnectionWarning />
         <Switch>
           <Route exact path={["/", "/home"]} component={Home}>
             <Home />
