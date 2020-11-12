@@ -116,22 +116,31 @@ export default function Register() {
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
     setWaiting(true);
-
+    user.name = username;
+    user.password = password;
+    user.email = email;
+    user.id = 0;
     UserService.create(user)
       .then((response: any) => {
+        console.log(response)
+        console.log(user)
         UserService.login(username, password)
           .then((response: any) => {
+            console.log("login response")
+            console.log(response)
             var userInfo = response.data.data;
             var token = userInfo.token;
             console.log(token);
             var decoded = atob(userInfo.token)
             if (decoded === username + password) {
+              console.log("Time to login");
               setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId));
-              history.push("/");
+              console.log(user);
+              console.log("Time to push to home")
+              history.push("/")
             }
           })
       })
-    e.preventDefault();
   }
 
   return (

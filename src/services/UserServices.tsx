@@ -14,6 +14,8 @@ class UserDataService {
     return http.get(`/user/email/${email}`);
   }
   create(data: any) {
+    console.log("Create me:")
+    console.log(data);
     return http.post("/user", data);
   }
 
