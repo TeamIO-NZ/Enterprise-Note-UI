@@ -13,6 +13,7 @@ import { TextField } from '@material-ui/core';
 import MUIRichTextEditor from "mui-rte";
 import NoteDataService from '../services/NoteServices'
 import { Note } from '../models/Note';
+import { convertToRaw } from 'draft-js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,7 +46,10 @@ export default function EditDialog({ open, setOpen, editorId, ownerId }: { open:
   };
 
   const onChange = (data: any) => {
-    setData(btoa(data)); // store to temp state
+    console.log(data)
+    console.log(JSON.stringify(convertToRaw(data.getCurrentContent())));
+    console.log(btoa(JSON.stringify(convertToRaw(data.getCurrentContent()))));
+    setData(btoa(JSON.stringify(convertToRaw(data.getCurrentContent())))); // store to temp state
   }
 
   const handleSave = () => {

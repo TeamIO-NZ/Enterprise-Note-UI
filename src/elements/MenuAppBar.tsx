@@ -47,6 +47,9 @@ export default function MenuAppBar() {
   const handleUserListPush = () =>{
     history.push("/users");
   }
+  const handleMyNotesPush = () =>{
+    history.push("/");
+  }
   const handleLogout = () => {
     setUser(new User("", "", false, "","","",-1));
     history.push("/login");
@@ -89,7 +92,7 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>My Notes</MenuItem>
+                <MenuItem onClick={handleClose && handleMyNotesPush}>My Notes</MenuItem>
                 <MenuItem onClick={handleClose && handleUserListPush}>UserList</MenuItem>
                 <MenuItem onClick={handleClose && handleLogout}>Logout</MenuItem>
               </Menu>
