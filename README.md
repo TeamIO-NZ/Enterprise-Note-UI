@@ -15,4 +15,4 @@ Front end settings
 |Access screen has a list of users that can read and edit this note|[]|
 |Access screen has a dropdown of all the users and a radio button for no access, viewer, editor|[]|
 |Search bar for filtering and counting|[]|
-|User List Page|[]||
+|User List Page|[x]||
