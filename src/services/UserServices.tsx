@@ -5,13 +5,13 @@ class UserDataService {
     return http.get("/users");
   }
   get(id: number) {
-    return http.get(`/users/${id}`);
+    return http.get(`/user/${id}`);
   }
   getByName(name: string) {
-    return http.get(`/users/${name}`);
+    return http.get(`/user/name/${name}`);
   }
   getByEmail(email: string) {
-    return http.get(`/users/${email}`);
+    return http.get(`/user/email/${email}`);
   }
   create(data: any) {
     return http.post("/user", data);
