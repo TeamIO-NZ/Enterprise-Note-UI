@@ -81,7 +81,10 @@ export default function Home() {
   };
 
   const deleteUser = (userId: number) => {
-    UserServices.delete(userId);
+    console.log("Click")
+    UserServices.delete(userId).then((response) =>{
+      console.log(response);
+    });
   }
 
 

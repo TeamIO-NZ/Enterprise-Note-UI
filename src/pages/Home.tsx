@@ -63,7 +63,7 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
         </AccordionActions>
         <Divider />
         <AccordionDetails>
-          <ReactMarkdown plugins={[gfm]} children={draftToMarkdown(JSON.parse(atob(note.content)))} />
+          <ReactMarkdown plugins={[gfm]} children={draftToMarkdown(atob(note.content))} />
         </AccordionDetails>
       </Accordion>
     ),
@@ -95,6 +95,7 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     NoteServices.getData(user.id)
       .then(data => {
+        console.log(data)
         var n: Array<Note> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
