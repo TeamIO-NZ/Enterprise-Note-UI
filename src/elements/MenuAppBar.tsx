@@ -92,9 +92,9 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose && handleMyNotesPush}>My Notes</MenuItem>
-                <MenuItem onClick={handleClose && handleUserListPush}>UserList</MenuItem>
-                <MenuItem onClick={handleClose && handleLogout}>Logout</MenuItem>
+                <MenuItem onClick={() => {handleMyNotesPush(); handleClose()}}>My Notes</MenuItem>
+                <MenuItem onClick={() => {handleUserListPush();handleClose()}}>UserList</MenuItem>
+                <MenuItem onClick={() => {handleLogout();handleClose();}}>Logout</MenuItem>
               </Menu>
             </div>
           )}
