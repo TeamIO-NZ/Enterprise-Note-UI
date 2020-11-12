@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, setEditorOpen, setEditorId }: { expanded: string | boolean, handleExpand: any, classes: any, setEditorOpen: any, setEditorId: any }) {
+function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, setEditorOpen }: { expanded: string | boolean, handleExpand: any, classes: any, setEditorOpen: any }) {
   return notes.map((note: Note, index: number) =>
     React.cloneElement(
       element,
@@ -60,7 +60,7 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
         </AccordionSummary>
         <AccordionActions>
           <Tooltip title={"Delete Note"}><IconButton size="small"><Delete /></IconButton></Tooltip>
-          <Tooltip title={"Edit Note"}><IconButton size="small" onClick={setEditorOpen(true) && setEditorId(index)}><Edit /></IconButton></Tooltip>
+          <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => setEditorOpen(true)}><Edit /></IconButton></Tooltip>
         </AccordionActions>
         <Divider />
         <AccordionDetails>
@@ -100,7 +100,6 @@ export default function Home() {
   useEffect(() => { //TODO: change to update everytime a new note is avaliable, atm its trying to update eveytime the user id changes or the mount status changes
     NoteServices.getData(user.id)
       .then(data => {
-        console.log(data)
         var n: Array<Note> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
@@ -111,7 +110,7 @@ export default function Home() {
       .then(
         (n: Array<Note>) => {
           if (isMounted()) {
-           // setNotes(n);
+            setNotes(n);
             setIsLoaded(true);
           }
         }
@@ -126,7 +125,6 @@ export default function Home() {
   if (!isLoaded) {
     return <div>Loading...</div>
   } else {
-
     return (
       <div className={classes.root}>
         <Grid
@@ -151,8 +149,7 @@ export default function Home() {
                     expanded,
                     handleExpand,
                     classes,
-                    setEditorOpen,
-                    setEditorId
+                    setEditorOpen
                   }
                 )
               }
@@ -163,7 +160,7 @@ export default function Home() {
           </Grid>
         </Grid>
 
-        <EditDialog open={editorOpen} setOpen={setEditorOpen} note={notes[editorId === -1 ? 0:editorId]} editorId={editorId}/>
+        {/* <EditDialog open={editorOpen} setOpen={setEditorOpen} note={notes[editorId === -1 ? 0:editorId]} editorId={editorId}/> */}
       </div>
     );
   }
