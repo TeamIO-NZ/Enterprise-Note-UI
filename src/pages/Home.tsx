@@ -73,7 +73,7 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [dense] = React.useState(false);
-  const { user } = useUser();
+    const { user } = useUser();
 
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -89,7 +89,7 @@ export default function Home() {
         var n: Array<Note> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
-          n.push(new Note(element.Id, element.Title, element.Desc, element.Content, element.Owner, element.Viewers, element.Editors));
+          n.push(new Note(element.userid, element.title, element.desc, element.content, element.owner, element.viewers, element.editors));
         });
         return n;
       })

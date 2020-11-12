@@ -52,6 +52,7 @@ function generate(element: React.ReactElement, users: Array<User>, { expanded, h
           id={`panel${user.id}bh-header`}
         >
           <Typography className={classes.heading}>{user.name}</Typography>
+          <Typography className={classes.secondaryHeading}>{user.email}</Typography>
         </AccordionSummary>
         <AccordionActions>
           <Tooltip title={"Delete User"}><IconButton size="small"><Delete /></IconButton></Tooltip>
@@ -59,7 +60,6 @@ function generate(element: React.ReactElement, users: Array<User>, { expanded, h
         </AccordionActions>
         <Divider />
         <AccordionDetails>
-        <Typography className={classes.heading}>{user.email}</Typography>
         <Typography className={classes.heading}>{user.gender}</Typography>
         </AccordionDetails>
       </Accordion>
@@ -88,7 +88,7 @@ export default function Home() {
         var n: Array<User> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
-          n.push(new User(element.name, "",false,"",element.email,element.gender,element.id));
+          n.push(new User(element.name, "",false,"",element.email,element.gender,element.userId));
         });
         return n;
       })

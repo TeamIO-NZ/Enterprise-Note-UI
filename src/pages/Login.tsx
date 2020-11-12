@@ -80,11 +80,11 @@ export default function Login() {
     UserService.login(username, password)
     .then((response: any) => {
         var userInfo = response.data.data;
-        var token = userInfo.Token;
+        var token = userInfo.token;
         console.log(token);
-        var decoded = atob(userInfo.Token)
+        var decoded = atob(userInfo.token)
         if (decoded === username + password) {
-          setUser(new User(userInfo.name, userInfo.Password, true, userInfo.Token,userInfo.Email,userInfo.Gender,userInfo.ID));
+          setUser(new User(userInfo.name, userInfo.password, true, userInfo.token,userInfo.email,userInfo.gender,userInfo.userid));
           history.push("/");
         }
       })
