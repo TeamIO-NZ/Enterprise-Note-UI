@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function generate(element: React.ReactElement, users: Array<User>, { expanded, handleExpand, classes }: { expanded: string | boolean, handleExpand: any, classes: any }) {
-  console.log(users);
+function generate(element: React.ReactElement, users: Array<User>, { expanded, handleExpand, classes, deleteUser }: { expanded: string | boolean, handleExpand: any, classes: any, deleteUser: any }) {
+  //console.log(users);
   return users.map((user: User) =>
     React.cloneElement(
       element,
@@ -55,12 +55,12 @@ function generate(element: React.ReactElement, users: Array<User>, { expanded, h
           <Typography className={classes.secondaryHeading}>{user.email}</Typography>
         </AccordionSummary>
         <AccordionActions>
-          <Tooltip title={"Delete User"}><IconButton size="small"><Delete /></IconButton></Tooltip>
+          <Tooltip title={"Delete User"}><IconButton onClick={ () => deleteUser(user.id)} size="small"><Delete /></IconButton></Tooltip>
           <Tooltip title={"Edit User"}><IconButton size="small"><Edit /></IconButton></Tooltip>
         </AccordionActions>
         <Divider />
         <AccordionDetails>
-        <Typography className={classes.heading}>{user.gender}</Typography>
+          <Typography className={classes.heading}>{user.gender}</Typography>
         </AccordionDetails>
       </Accordion>
     ),
@@ -72,13 +72,17 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [users, setUsers] = React.useState<Array<User>>([]);
   const [dense] = React.useState(false);
-    const { user } = useUser();
+  const { user } = useUser();
 
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
   const handleExpand = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const deleteUser = (userId: number) => {
+    UserServices.delete(userId);
+  }
 
 
   useEffect(() => {
@@ -88,7 +92,7 @@ export default function Home() {
         var n: Array<User> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
-          n.push(new User(element.name, "",false,"",element.email,element.gender,element.userId));
+          n.push(new User(element.name, "", false, "", element.email, element.gender, element.userId));
         });
         return n;
       })
@@ -127,7 +131,8 @@ export default function Home() {
                   {
                     expanded,
                     handleExpand,
-                    classes
+                    classes,
+                    deleteUser
                   }
                 )
               }

@@ -12,7 +12,7 @@ import Container from '@material-ui/core/Container';
 import User from '../models/User';
 import UserService from '../services/UserServices';
 import { useUser } from '../services/Context';
-import { Grid } from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import Copyright from '../elements/Copyright';
 
 //standard material ui stylesheet stuff
@@ -40,16 +40,17 @@ export default function Login() {
   const classes = useStyles();                  //Sets styles for components
   const [usernameInvalid, setUsernameInvalid] = React.useState<boolean>(false);   //used for checking username validity
   const [passwordInvalid, setPasswordInvalid] = React.useState<boolean>(false);   //used for checking password validity
+  const [waiting, setWaiting] = React.useState<boolean>(false); // used to wait for response from api, check valid creds.
   const { user, setUser } = useUser();          //set user context. important for passing the user around the components      
   const history = useHistory();                 //set history context for better routing
 
   //if user is logged in we dont need to be here. go to the notes page
-  if(user.id != -1) {
+  if (user.id !== -1) {
     history.push("/");
   }
 
   //check username for white space and denies validity if it has it
-   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     if ((/\s/g.test(e.target.value))) {
       setUsernameInvalid(true);
     } else {
@@ -78,14 +79,20 @@ export default function Login() {
   const processJsonResponse = (username: string, password: string) => {
     //call the login function then process the data and decode the token and check its valid. if it is set user to the response and push to the home page
     UserService.login(username, password)
-    .then((response: any) => {
-        var userInfo = response.data.data;
-        var token = userInfo.token;
-        console.log(token);
-        var decoded = atob(userInfo.token)
-        if (decoded === username + password) {
-          setUser(new User(userInfo.name, userInfo.password, true, userInfo.token,userInfo.email,userInfo.gender,userInfo.userid));
-          history.push("/");
+      .then((response: any) => {
+        setWaiting(false);
+        if (response.data.data) {
+          var userInfo = response.data.data;
+          var token = userInfo.token;
+          console.log(token);
+          var decoded = atob(userInfo.token)
+          if (decoded === username + password) {
+            setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userid));
+            history.push("/");
+          }
+        } else {
+          setUsernameInvalid(true);
+          setPasswordInvalid(true);
         }
       })
   }
@@ -112,6 +119,7 @@ export default function Login() {
             autoComplete="username"
             error={usernameInvalid}
             onChange={handleUsername}
+            disabled={waiting}
             autoFocus
           />
           <TextField
@@ -126,6 +134,7 @@ export default function Login() {
             error={passwordInvalid}
             autoComplete="current-password"
             onChange={handlePassword}
+            disabled={waiting}
           />
 
           <Button
@@ -133,23 +142,25 @@ export default function Login() {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={usernameInvalid && passwordInvalid}
+            disabled={(usernameInvalid && passwordInvalid) || waiting}
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Login
+            {
+              waiting ? <CircularProgress size={25} /> : "Login"
+            }
 
           </Button>
 
         </form>
         <Grid container>
-            <Grid item xs></Grid>
-            <Grid item>
-              <Link to="/register">
-                {"Don't have an account? Register"}
-              </Link>
-            </Grid>
+          <Grid item xs></Grid>
+          <Grid item>
+            <Link to="/register">
+              {"Don't have an account? Register"}
+            </Link>
           </Grid>
+        </Grid>
       </div>
       <Box mt={8}>
         <Copyright />
