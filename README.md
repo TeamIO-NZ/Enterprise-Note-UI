@@ -7,7 +7,7 @@ Front end settings
 |Feature|Status|Comments|
 |---|---|---|
 |Login Page for selecting current user|[x]|Might need some work getting shared user settings but maybe not|
-|Register Page for making new users|[]|In Progress|
+|Register Page for making new users|[x]|Done, fuck you react|
 |Home Page that shows all notes a user has access to|[x]|Pretty sure this is done|
 |Note access page/component for displaying note information|[x]|It looks pretty cool tbh|
 |Note edit button that allows changes with a submit button|[]|

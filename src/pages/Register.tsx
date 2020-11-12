@@ -3,8 +3,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import { Link, useHistory } from "react-router-dom";
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -14,7 +12,7 @@ import Container from '@material-ui/core/Container';
 import User from '../models/User';
 import UserService from '../services/UserServices';
 import { useUser } from '../services/Context';
-import { CircularProgress, Grid, LinearProgress } from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import Copyright from '../elements/Copyright';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,11 +50,12 @@ export default function Register() {
 
   const { user, setUser } = useUser();
   const history = useHistory();
+  // eslint-disable-next-line no-useless-escape
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   let pass = "";
 
 
-  if (user.id !== -1) {
+  if (user.id > 0) {
     history.push("/"); // prevent logged in users from registering.
   }
 
@@ -116,10 +115,12 @@ export default function Register() {
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
     setWaiting(true);
+    e.preventDefault();
+
     user.name = username;
     user.password = password;
     user.email = email;
-    user.id = 0;
+
     UserService.create(user)
       .then((response: any) => {
         console.log(response)
