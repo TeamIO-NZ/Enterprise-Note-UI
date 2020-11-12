@@ -7,6 +7,7 @@ import User from './models/User'
 import Home from './pages/Home';
 import { UserContext } from './services/Context';
 import Register from './pages/Register';
+import UserList from './pages/UserList';
 
 function App() {
   const [user, setUser] = React.useState<User>(new User("", "", false, "", "", "", -1));
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route exact path="/register" component={Register} >
             <Register />
+          </Route>
+          <Route exact path="/users" component={UserList} >
+            <UserList />
           </Route>
         </Switch>
       </React.Fragment>
