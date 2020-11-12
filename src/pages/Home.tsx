@@ -42,9 +42,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, setEditorOpen }: { expanded: string | boolean, handleExpand: any, classes: any, setEditorOpen: any }) {
-  return notes.map((note: Note, index: number) =>
-    React.cloneElement(
+function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, setEditorOpen,deleteNote }: { expanded: string | boolean, handleExpand: any, classes: any, setEditorOpen: any,deleteNote:any}) {
+  return notes.map((note: Note, index: number) => React.cloneElement(
       element,
       {
         key: index
@@ -59,7 +58,7 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
           <Typography className={classes.secondaryHeading}>{note.desc}</Typography>
         </AccordionSummary>
         <AccordionActions>
-          <Tooltip title={"Delete Note"}><IconButton size="small"><Delete /></IconButton></Tooltip>
+          <Tooltip title={"Delete Note"}><IconButton size="small" onClick={() => deleteNote(note.id)}><Delete /></IconButton></Tooltip>
           <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => setEditorOpen(true)}><Edit /></IconButton></Tooltip>
         </AccordionActions>
         <Divider />
@@ -91,7 +90,12 @@ export default function Home() {
   const handleExpand = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
-
+  const deleteNote = (noteId: number) => {
+    console.log("Click")
+    NoteServices.delete(noteId).then((response) =>{
+      console.log(response);
+    });
+  }
   const handleCreateNew = () => {
     setEditorId(-1);
     setEditorOpen(true);
@@ -103,7 +107,8 @@ export default function Home() {
         var n: Array<Note> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
-          n.push(new Note(element.userid, element.title, element.desc, element.content, element.owner, element.viewers, element.editors));
+          console.log(element.id)
+          n.push(new Note(element.id, element.title, element.desc, element.content, element.owner, element.viewers, element.editors));
         });
         return n;
       })
@@ -149,7 +154,8 @@ export default function Home() {
                     expanded,
                     handleExpand,
                     classes,
-                    setEditorOpen
+                    setEditorOpen,
+                    deleteNote
                   }
                 )
               }

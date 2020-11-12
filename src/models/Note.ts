@@ -1,5 +1,5 @@
 export class Note {
-    constructor(id: string, title: string, desc: string, content: string, owner: number, viewers: number[], editors: number[]) {
+    constructor(id: number, title: string, desc: string, content: string, owner: number, viewers: number[], editors: number[]) {
         this.id = id;
         this.title = title;
         this.desc = desc;
@@ -8,7 +8,7 @@ export class Note {
         this.viewers = viewers;
         this.editors = editors;
     }
-    id: string;
+    id: number;
     title: string;
     desc: string;
     content: string;

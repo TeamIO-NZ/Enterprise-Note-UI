@@ -54,7 +54,7 @@ export default function EditDialog({ open, setOpen, editorId, note }: { open: bo
   }
 
   const handleSave = () => {
-    let n = new Note(editorId === -1 ? "" : String(editorId), title, desc, data, user.id, [], []);
+    let n = new Note(editorId === -1 ? 0 : note.id, title, desc, data, user.id, [], []);
     NoteDataService.create(n);
   };
 

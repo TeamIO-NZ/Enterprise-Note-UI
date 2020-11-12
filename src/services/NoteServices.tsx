@@ -20,6 +20,7 @@ class NoteDataService {
   }
 
   delete(id: number) {
+    console.log("Deleting note");
     return http.delete(`/note/${id}`);
   }
 
