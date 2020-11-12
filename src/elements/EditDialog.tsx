@@ -14,6 +14,7 @@ import MUIRichTextEditor from "mui-rte";
 import NoteDataService from '../services/NoteServices'
 import { Note } from '../models/Note';
 import { convertToRaw } from 'draft-js';
+import { useUser } from '../services/Context';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +43,7 @@ export default function EditDialog({ open, setOpen, editorId, note }: { open: bo
   const [data, setData] = React.useState<string>("");
   const [title, setTitle] = React.useState<string>("");
   const [desc, setDesc] = React.useState<string>("");
-
+  const { user, setUser } = useUser();          //set user context. important for passing the user around the components      
 
   const handleClose = () => {
     setOpen(false);
@@ -53,7 +54,7 @@ export default function EditDialog({ open, setOpen, editorId, note }: { open: bo
   }
 
   const handleSave = () => {
-    let n = new Note(editorId === -1 ? "" : String(editorId), title, desc, data, note.owner, note.viewers, note.editors);
+    let n = new Note(editorId === -1 ? "" : String(editorId), title, desc, data, user.id, [], []);
     NoteDataService.create(n);
   };
 
@@ -79,7 +80,7 @@ export default function EditDialog({ open, setOpen, editorId, note }: { open: bo
             onChange={onChange}
             label="Type something here..."
             onSave={handleSave}
-            defaultValue={JSON.stringify(atob(note.content))}
+           // defaultValue={JSON.stringify(atob(note.content))} //TODO fix me
           />
         </div>
       </Dialog>
