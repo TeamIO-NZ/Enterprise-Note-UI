@@ -4,15 +4,17 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Note } from '../models/Note';
-import { AccordionActions, AccordionDetails, Button, Divider, IconButton, ListItem, Tooltip } from '@material-ui/core';
+import { AccordionActions, AccordionDetails, Button, Divider, Fab, IconButton, ListItem, Tooltip } from '@material-ui/core';
 import NoteServices from '../services/NoteServices';
 import { useUser } from '../services/Context';
 import { Redirect } from 'react-router-dom';
 import Accordion from '@material-ui/core/Accordion/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary/AccordionSummary';
-import { Delete, Edit, ExpandMore } from '@material-ui/icons';
+import { Add, Delete, Edit, ExpandMore } from '@material-ui/icons';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
+import EditDialog from '../elements/EditDialog';
+import { draftToMarkdown } from 'markdown-draft-js';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes }: { expanded: string | boolean, handleExpand: any, classes: any }) {
+function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, setEditorOpen }: { expanded: string | boolean, handleExpand: any, classes: any, setEditorOpen: any }) {
   return notes.map((note: Note, index: number) =>
     React.cloneElement(
       element,
@@ -57,11 +59,11 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
         </AccordionSummary>
         <AccordionActions>
           <Tooltip title={"Delete Note"}><IconButton size="small"><Delete /></IconButton></Tooltip>
-          <Tooltip title={"Edit Note"}><IconButton size="small"><Edit /></IconButton></Tooltip>
+          <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => setEditorOpen(true)}><Edit /></IconButton></Tooltip>
         </AccordionActions>
         <Divider />
         <AccordionDetails>
-          <ReactMarkdown plugins={[gfm]} children={decodeURIComponent(note.content)} />
+          <ReactMarkdown plugins={[gfm]} children={draftToMarkdown(JSON.parse(atob(note.content)))} />
         </AccordionDetails>
       </Accordion>
     ),
@@ -73,7 +75,10 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = React.useState(false);
   const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [dense] = React.useState(false);
-    const { user } = useUser();
+  const { user } = useUser();
+
+  const [editorOpen, setEditorOpen] = React.useState(false);
+  const [editorId, setEditorId] = React.useState<number>(-1);
 
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -81,6 +86,10 @@ export default function Home() {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const handleCreateNew = () => {
+    setEditorId(-1);
+    setEditorOpen(true);
+  }
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,6 +115,7 @@ export default function Home() {
   if (!isLoaded) {
     return <div>Loading...</div>
   } else {
+    
     return (
       <div className={classes.root}>
         <Grid
@@ -118,6 +128,7 @@ export default function Home() {
           <Grid item xs={12} md={6}>
             <Typography variant="h6" className={classes.title}>
               Your Notes
+              <IconButton onClick={() => handleCreateNew()}><Add /></IconButton>
             </Typography>
             <List dense={dense}>
               {
@@ -128,7 +139,8 @@ export default function Home() {
                   {
                     expanded,
                     handleExpand,
-                    classes
+                    classes,
+                    setEditorOpen
                   }
                 )
               }
@@ -138,6 +150,8 @@ export default function Home() {
 
           </Grid>
         </Grid>
+
+        <EditDialog open={editorOpen} setOpen={setEditorOpen} editorId={editorId} ownerId={user.id}/>
       </div>
     );
   }
