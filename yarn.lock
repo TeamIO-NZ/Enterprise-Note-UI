@@ -9777,6 +9777,11 @@ react-scripts@4.0.0:
   optionalDependencies:
     fsevents "^2.1.3"
 
+react-tidy@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-tidy/-/react-tidy-1.1.0.tgz#68c29e1c1bfa2ecc55c3060ee2784d2ee2b5cbe8"
+  integrity sha512-rOA0Fjz9BybfxhcPffSp3NzRw6INTNyKb+W1SxmWoUfdOVExfMszD22kK051fMHX7Ks78c1kq4A9gxgTCJMO6w==
+
 react-transition-group@^4.4.0:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.1.tgz#63868f9325a38ea5ee9535d828327f85773345c9"

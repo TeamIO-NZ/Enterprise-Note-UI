@@ -120,6 +120,7 @@ export default function Register() {
     user.name = username;
     user.password = password;
     user.email = email;
+    user.id = 0;
 
     UserService.create(user)
       .then((response: any) => {

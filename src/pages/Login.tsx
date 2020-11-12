@@ -14,6 +14,7 @@ import UserService from '../services/UserServices';
 import { useUser } from '../services/Context';
 import { CircularProgress, Grid } from '@material-ui/core';
 import Copyright from '../elements/Copyright';
+import { useIsMounted } from 'react-tidy';
 
 //standard material ui stylesheet stuff
 const useStyles = makeStyles((theme) => ({
@@ -43,14 +44,19 @@ export default function Login() {
   const [waiting, setWaiting] = React.useState<boolean>(false); // used to wait for response from api, check valid creds.
   const { user, setUser } = useUser();          //set user context. important for passing the user around the components      
   const history = useHistory();                 //set history context for better routing
+  const isMounted = useIsMounted();
 
   //if user is logged in we dont need to be here. go to the notes page
   if (user.id !== -1) {
-    history.push("/");
+    if(isMounted()) {
+      history.push("/");
+    }
+    
   }
-
+  console.log("Before Handles");
   //check username for white space and denies validity if it has it
   const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleUsername");
     if ((/\s/g.test(e.target.value))) {
       setUsernameInvalid(true);
     } else {
@@ -60,6 +66,7 @@ export default function Login() {
   }
   //checks the passwords not blank
   const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("HandlePassword")
     if (e.target.value === "") {
       setPasswordInvalid(true);
       console.log("invalid password")
@@ -70,7 +77,7 @@ export default function Login() {
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
-
+    
     e.preventDefault();
     processJsonResponse(user.name, user.password);
   }
@@ -80,21 +87,23 @@ export default function Login() {
     //call the login function then process the data and decode the token and check its valid. if it is set user to the response and push to the home page
     UserService.login(username, password)
       .then((response: any) => {
-        setWaiting(false);
-        if (response.data.data) {
-          var userInfo = response.data.data;
-          var token = userInfo.token;
-          console.log(token);
-          var decoded = atob(userInfo.token)
-          if (decoded === username + password) {
-            setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId));
-            history.push("/");
+        if (isMounted()) {
+          setWaiting(false);
+          if (response.data.data) {
+            var userInfo = response.data.data;
+            var token = userInfo.token;
+            console.log(token);
+            var decoded = atob(userInfo.token)
+            if (decoded === username + password) {
+              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId));
+              history.push("/");
+            }
+          } else {
+            setUsernameInvalid(true);
+            setPasswordInvalid(true);
           }
-        } else {
-          setUsernameInvalid(true);
-          setPasswordInvalid(true);
         }
-      })
+      });
   }
   //return the render info for the components for this page
   return (
@@ -118,7 +127,7 @@ export default function Login() {
             name="username"
             autoComplete="username"
             error={usernameInvalid}
-            onChange={handleUsername}
+            onChange={(e: any) => handleUsername(e)}
             disabled={waiting}
             autoFocus
           />
@@ -133,7 +142,7 @@ export default function Login() {
             id="password"
             error={passwordInvalid}
             autoComplete="current-password"
-            onChange={handlePassword}
+            onChange={(e: any) => handlePassword(e)}
             disabled={waiting}
           />
 
@@ -144,7 +153,7 @@ export default function Login() {
             color="primary"
             disabled={(usernameInvalid && passwordInvalid) || waiting}
             className={classes.submit}
-            onClick={handleSubmit}
+            onClick={(e: any) => handleSubmit(e)}
           >
             {
               waiting ? <CircularProgress size={25} /> : "Login"

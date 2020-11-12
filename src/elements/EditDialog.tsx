@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       flex: 1,
     },
     editor: {
-      margin: theme.spacing(2)
+      margin: 40
     }
   }),
 );
@@ -37,26 +37,24 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EditDialog({ open, setOpen, editorId, ownerId }: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, editorId: number, ownerId: number }) {
+export default function EditDialog({ open, setOpen, editorId, note }: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, editorId: number, note: Note }) {
   const classes = useStyles();
   const [data, setData] = React.useState<string>("");
+  const [title, setTitle] = React.useState<string>("");
+  const [desc, setDesc] = React.useState<string>("");
+
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const onChange = (data: any) => {
-    console.log(data)
-    console.log(JSON.stringify(convertToRaw(data.getCurrentContent())));
-    console.log(btoa(JSON.stringify(convertToRaw(data.getCurrentContent()))));
     setData(btoa(JSON.stringify(convertToRaw(data.getCurrentContent())))); // store to temp state
   }
 
   const handleSave = () => {
-    let note = new Note("", "title", "description", data, ownerId, [], []);
-   // let note = new Note((editorId === -1) ? "0" : `${editorId}`, "title", "description", data, ownerId, [], []);
-    NoteDataService.create(note);
-    console.log(note);
+    let n = new Note(editorId === -1 ? "" : String(editorId), title, desc, data, note.owner, note.viewers, note.editors);
+    NoteDataService.create(n);
   };
 
   return (
@@ -68,7 +66,7 @@ export default function EditDialog({ open, setOpen, editorId, ownerId }: { open:
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              <TextField id="title" placeholder="Title" /> <TextField id="description" placeholder="Summary" />
+              <TextField id="title" placeholder="Title" onChange={(e: any) => setTitle(e.target.value)} /> <TextField id="description" placeholder="Summary" onChange={(e: any) => setDesc(e.target.value)} />
             </Typography>
             <Button autoFocus color="inherit" onClick={handleClose && handleSave}>
               save
@@ -80,6 +78,8 @@ export default function EditDialog({ open, setOpen, editorId, ownerId }: { open:
             inlineToolbar={true}
             onChange={onChange}
             label="Type something here..."
+            onSave={handleSave}
+            defaultValue={JSON.stringify(atob(note.content))}
           />
         </div>
       </Dialog>

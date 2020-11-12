@@ -21,18 +21,10 @@ function App() {
         <MenuAppBar />
         <ConnectionWarning />
         <Switch>
-          <Route exact path={["/", "/home"]} component={Home}>
-            <Home />
-          </Route>
-          <Route exact path="/login" component={Login}>
-            <Login />
-          </Route>
-          <Route exact path="/register" component={Register} >
-            <Register />
-          </Route>
-          <Route exact path="/users" component={UserList} >
-            <UserList />
-          </Route>
+          <Route exact path={["/", "/home"]} component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/users" component={UserList} />
         </Switch>
       </React.Fragment>
     </UserContext.Provider>
