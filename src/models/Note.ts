@@ -16,12 +16,3 @@ export class Note {
     viewers: number[];
     editors: number[]
 }
-
-export class Notes {
-    constructor(id:string, notes:Note[]){
-        this.id = id;
-        this.notes = notes;
-    }
-    id:string;
-    notes:Note[];
-}
