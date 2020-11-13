@@ -131,11 +131,10 @@ export default function EditDialog({ open, setOpen, note, setShouldRefresh }: { 
     note.desc = desc;
     note.content = content;
 
-    if (note.id !== "-1" && note.id !== "" && note.id !== undefined && note.id !== null && note.id !== "0") {
-      console.log(note.id)
+    if (typeof(note.id) === 'number' && note.id > 0) {
       NoteDataService.update(note.id, note);
     } {
-      NoteDataService.create(note);
+      NoteDataService.create(note).then((res) => {console.log(`create: ${res}`)});
     }
   };
 

@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, handleEditorOpen, deleteNote }: { expanded: string | boolean, handleExpand: any, classes: any, handleEditorOpen: Function, deleteNote: any }) {
+function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, handleOpenEditor, deleteNote }: { expanded: string | boolean, handleExpand: any, classes: any, handleOpenEditor: any, deleteNote: any }) {
   return notes.map((note: Note, index: number) => React.cloneElement(
     element,
     {
@@ -59,7 +59,7 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
       </AccordionSummary>
       <AccordionActions>
         <Tooltip title={"Delete Note"}><IconButton size="small" onClick={() => deleteNote(note.id)}><Delete /></IconButton></Tooltip>
-        <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => handleEditorOpen(index)}><Edit /></IconButton></Tooltip>
+        <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => handleOpenEditor(index)}><Edit /></IconButton></Tooltip>
       </AccordionActions>
       <Divider />
       <AccordionDetails>
@@ -109,7 +109,7 @@ export default function Home() {
   const [searchType, setSearchType] = React.useState("regex")
   const [searchLock, setSearchLock] = React.useState(false);
   const [searchCount, setSearchCount] = React.useState(0);
-  const [activeNote, setActiveNote] = React.useState(new Note("", "", "", "", user.id, [], []));
+  const [activeNote, setActiveNote] = React.useState(new Note(0, "", "", "", user.id, [], []));
   const [shouldRefresh, setShouldRefresh] = React.useState("change-me-to-refresh");
 
   const handleExpand = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
@@ -122,13 +122,13 @@ export default function Home() {
     });
   }
   const handleCreateNew = () => {
-    setActiveNote(new Note("", "", "", "", user.id, [], []));
+    setActiveNote(new Note(0, "", "", "", user.id, [], []));
     setEditorOpen(true);
   }
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchType(event.target.value)
     
-    if (event.target.value == "Regex" || event.target.value == "Phone" || event.target.value == "Email") {
+    if (event.target.value === "Regex" || event.target.value === "Phone" || event.target.value === "Email") {
       setSearchLock(false);
     }
     else {
@@ -213,7 +213,7 @@ export default function Home() {
                     expanded,
                     handleExpand,
                     classes,
-                    handleOpenEditor
+                    handleOpenEditor,
                     deleteNote
                   }
                 )
