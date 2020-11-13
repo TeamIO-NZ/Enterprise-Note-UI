@@ -16,6 +16,7 @@ import gfm from 'remark-gfm';
 import EditDialog from '../elements/EditDialog';
 import { draftToMarkdown } from 'markdown-draft-js';
 import { useIsMounted } from 'react-tidy';
+import NoteShareGroup from '../elements/NoteShareGroup';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +58,8 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
         <Typography className={classes.heading}>{note.title}</Typography>
         <Typography className={classes.secondaryHeading}>{note.desc}</Typography>
       </AccordionSummary>
-      <AccordionActions>
+      <AccordionActions disableSpacing={true}>
+        <NoteShareGroup note={note}/>
         <Tooltip title={"Delete Note"}><IconButton size="small" onClick={() => deleteNote(note.id)}><Delete /></IconButton></Tooltip>
         <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => handleOpenEditor(index)}><Edit /></IconButton></Tooltip>
       </AccordionActions>
@@ -150,7 +152,7 @@ export default function Home() {
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
           console.log(element.id)
-          n.push(new Note(element.id, element.title, element.desc, element.content, element.owner, element.viewers, element.editors));
+          n.push(new Note(element.id, element.title, element.desc, element.content, element.owner, element.viewers ?? [], element.editors ?? []));
         });
         return n;
       })
