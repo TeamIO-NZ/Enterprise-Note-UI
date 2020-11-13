@@ -119,6 +119,7 @@ export default function Home() {
     console.log("Click")
     NoteServices.delete(noteId).then((response) => {
       console.log(response);
+      setShouldRefresh(String(Date.now()));
     });
   }
   const handleCreateNew = () => {

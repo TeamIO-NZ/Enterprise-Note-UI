@@ -73,6 +73,7 @@ export default function Home() {
   const [users, setUsers] = React.useState<Array<User>>([]);
   const [dense] = React.useState(false);
   const { user } = useUser();
+  const [shouldRefresh, setShouldRefresh] = React.useState("change-me-to-refresh");
 
   const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -84,6 +85,8 @@ export default function Home() {
     console.log("Click")
     UserServices.delete(userId).then((response) =>{
       console.log(response);
+      setShouldRefresh(String(Date.now()));
+
     });
   }
 
@@ -105,7 +108,7 @@ export default function Home() {
           setIsLoaded(true);
         }
       )
-  }, []);
+  }, [shouldRefresh]);
   if (!user.loggedIn) {
     return <Redirect to="/login" />
   }
