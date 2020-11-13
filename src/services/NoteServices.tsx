@@ -15,11 +15,12 @@ class NoteDataService {
     return http.post("/note", data);
   }
 
-  update(id: string, data: any) {
+  update(id: number, data: any) {
     return http.put(`/note/${id}`, data);
   }
 
   delete(id: number) {
+    console.log("Deleting note");
     return http.delete(`/note/${id}`);
   }
 
