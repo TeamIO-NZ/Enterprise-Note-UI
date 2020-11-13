@@ -1,5 +1,5 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
+import { createStyles, fade, makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -9,12 +9,13 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import { TransitionProps } from '@material-ui/core/transitions';
-import { TextField } from '@material-ui/core';
+import { InputBase } from '@material-ui/core';
 import MUIRichTextEditor from "mui-rte";
 import NoteDataService from '../services/NoteServices'
 import { Note } from '../models/Note';
-import { convertToRaw } from 'draft-js';
+import { convertToRaw, EditorState } from 'draft-js';
 import { useUser } from '../services/Context';
+import { Description, Title } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,7 +28,43 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     editor: {
       margin: 40
-    }
+    },
+    search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      margin: 3,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3),
+        width: 'auto',
+      },
+    },
+    searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    inputRoot: {
+      color: 'inherit',
+    },
+    inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: '20ch',
+      },
+    },
   }),
 );
 
@@ -38,24 +75,68 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function EditDialog({ open, setOpen, editorId, note }: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, editorId: number, note: Note }) {
+export default function EditDialog({ open, setOpen, note, setShouldRefresh }: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, note: Note, setShouldRefresh: Function }) {
   const classes = useStyles();
-  const [data, setData] = React.useState<string>("");
-  const [title, setTitle] = React.useState<string>("");
-  const [desc, setDesc] = React.useState<string>("");
-  const { user, setUser } = useUser();          //set user context. important for passing the user around the components      
-
+  const [content, setContent] = React.useState<string>(note.content);
+  const [title, setTitle] = React.useState<string>(note.title);
+  const [desc, setDesc] = React.useState<string>(note.desc);
+  const [data, setData] = React.useState<string>(JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent())));
+  const { user, setUser } = useUser();          //set user context. important for passing the user around the components     
   const handleClose = () => {
     setOpen(false);
+    // request refresh
+    setShouldRefresh(String(Date.now())); // get epoch so it updates the var, refreshing the notes list
   };
 
-  const onChange = (data: any) => {
-    setData(btoa(JSON.stringify(convertToRaw(data.getCurrentContent())))); // store to temp state
+  const handleContentChange = (event: EditorState) => {
+    console.log(`current state: ${JSON.stringify(convertToRaw(event.getCurrentContent()))}`);
+    setContent(btoa(JSON.stringify(convertToRaw(event.getCurrentContent())))); // store to temp state
+    
   }
 
+  const handleTitleChange = (e: any) => {
+    setTitle(e.target.value)
+  }
+
+  const handleDescChange = (e: any) => {
+    setDesc(e.target.value)
+  }
+
+  const saveAndClose = () => {
+    handleSave();
+    handleClose();
+  }
+
+  useEffect(() => {
+
+    if (note.content == "") {
+      console.log("fuckin empty")
+      note.content = btoa(JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent())));
+      // console.log(`start: ${JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent()))}`);
+    } else {
+      console.log("not empty")
+    }
+    // console.log(`end: ${JSON.stringify(atob(note.content))}`);
+
+    // consolelog(atob(note.content));
+    // console.log("{\"blocks\":[{\"key\":\"6u35f\",\"text\":\"test big boi\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}");
+
+   setData(atob(note.content));
+  // setData("{\"blocks\":[{\"key\":\"6u35f\",\"text\":\"test big boi\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}")
+    // console.log("{\"blocks\":[{\"key\":\"6u35f\",\"text\":\"test big boi\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}" === JSON.stringify(atob(note.content)))
+  }, [note.content])
+
   const handleSave = () => {
-    let n = new Note(editorId === -1 ? "" : String(editorId), title, desc, data, user.id, [], []);
-    NoteDataService.create(n);
+    note.title = title;
+    note.desc = desc;
+    note.content = content;
+
+    if (note.id !== "-1" && note.id !== "" && note.id !== undefined && note.id !== null && note.id !== "0") {
+      console.log(note.id)
+      NoteDataService.update(note.id, note);
+    } {
+      NoteDataService.create(note);
+    }
   };
 
   return (
@@ -63,13 +144,44 @@ export default function EditDialog({ open, setOpen, editorId, note }: { open: bo
       <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
         <AppBar className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <IconButton edge="start" color="inherit" onClick={() => handleClose()} aria-label="close">
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              <TextField id="title" placeholder="Title" onChange={(e: any) => setTitle(e.target.value)} /> <TextField id="description" placeholder="Summary" onChange={(e: any) => setDesc(e.target.value)} />
+              {/* <TextField placeholder="Title" onChange={(e: any) => setTitle(e.target.value)} /> <TextField placeholder="Summary" onChange={(e: any) => setDesc(e.target.value)} /> */}
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <Title />
+                </div>
+                <InputBase
+                  placeholder="Title"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'title' }}
+                  onChange={handleTitleChange}
+                  defaultValue={note.title}
+                />
+              </div>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <Description />
+                </div>
+                <InputBase
+                  placeholder="Description"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'description' }}
+                  onChange={handleDescChange}
+                  defaultValue={note.desc}
+                />
+              </div>
+
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose && handleSave}>
+            <Button autoFocus color="inherit" onClick={() => saveAndClose()}>
               save
             </Button>
           </Toolbar>
@@ -77,10 +189,10 @@ export default function EditDialog({ open, setOpen, editorId, note }: { open: bo
         <div className={classes.editor}>
           <MUIRichTextEditor
             inlineToolbar={true}
-            onChange={onChange}
+            onChange={handleContentChange}
             label="Type something here..."
             onSave={handleSave}
-           // defaultValue={JSON.stringify(atob(note.content))} //TODO fix me
+            defaultValue={data}
           />
         </div>
       </Dialog>

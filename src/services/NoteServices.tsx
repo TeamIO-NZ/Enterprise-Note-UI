@@ -15,7 +15,7 @@ class NoteDataService {
     return http.post("/note", data);
   }
 
-  update(id: number, data: any) {
+  update(id: string, data: any) {
     return http.put(`/note/${id}`, data);
   }
 

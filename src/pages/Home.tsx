@@ -4,7 +4,7 @@ import List from '@material-ui/core/List';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Note } from '../models/Note';
-import { AccordionActions, AccordionDetails, Divider, IconButton, ListItem, Tooltip } from '@material-ui/core';
+import { AccordionActions, AccordionDetails, CircularProgress, Divider, IconButton, ListItem, Tooltip } from '@material-ui/core';
 import NoteServices from '../services/NoteServices';
 import { useUser } from '../services/Context';
 import { useHistory } from 'react-router-dom';
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, setEditorOpen }: { expanded: string | boolean, handleExpand: any, classes: any, setEditorOpen: any }) {
+function generate(element: React.ReactElement, notes: Array<Note>, { expanded, handleExpand, classes, handleOpenEditor }: { expanded: string | boolean, handleExpand: any, classes: any, handleOpenEditor: any }) {
   return notes.map((note: Note, index: number) =>
     React.cloneElement(
       element,
@@ -60,7 +60,7 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
         </AccordionSummary>
         <AccordionActions>
           <Tooltip title={"Delete Note"}><IconButton size="small"><Delete /></IconButton></Tooltip>
-          <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => setEditorOpen(true)}><Edit /></IconButton></Tooltip>
+          <Tooltip title={"Edit Note"}><IconButton size="small" onClick={() => handleOpenEditor(index)}><Edit /></IconButton></Tooltip>
         </AccordionActions>
         <Divider />
         <AccordionDetails>
@@ -84,20 +84,27 @@ export default function Home() {
   const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [dense] = React.useState(false);
   const [editorOpen, setEditorOpen] = React.useState(false);
-  const [editorId, setEditorId] = React.useState<number>(-1);
   const [expanded, setExpanded] = React.useState<string | false>(false);
   const isMounted = useIsMounted();
+  const [activeNote, setActiveNote] = React.useState(new Note("", "", "", "", user.id, [], []));
+  const [shouldRefresh, setShouldRefresh] = React.useState("change-me-to-refresh");
 
   const handleExpand = (panel: string) => (event: React.ChangeEvent<{}>, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   const handleCreateNew = () => {
-    setEditorId(-1);
+    setActiveNote(new Note("", "", "", "", user.id, [], []));
     setEditorOpen(true);
   }
 
-  useEffect(() => { //TODO: change to update everytime a new note is avaliable, atm its trying to update eveytime the user id changes or the mount status changes
+  const handleOpenEditor = (index: number) => {
+    setActiveNote(notes[index]);
+    setEditorOpen(true);
+  }
+
+  useEffect(() => {
+    setIsLoaded(false);
     NoteServices.getData(user.id)
       .then(data => {
         var n: Array<Note> = [];
@@ -115,7 +122,7 @@ export default function Home() {
           }
         }
       )
-  }, [user.id, isMounted]);
+  }, [user.id, isMounted, shouldRefresh]);
 
   if (!user.loggedIn) {
     history.push("/login")
@@ -123,7 +130,11 @@ export default function Home() {
   }
 
   if (!isLoaded) {
-    return <div>Loading...</div>
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </div>
+    );
   } else {
     return (
       <div className={classes.root}>
@@ -149,7 +160,7 @@ export default function Home() {
                     expanded,
                     handleExpand,
                     classes,
-                    setEditorOpen
+                    handleOpenEditor
                   }
                 )
               }
@@ -160,7 +171,7 @@ export default function Home() {
           </Grid>
         </Grid>
 
-        {/* <EditDialog open={editorOpen} setOpen={setEditorOpen} note={notes[editorId === -1 ? 0:editorId]} editorId={editorId}/> */}
+        <EditDialog open={editorOpen} setOpen={setEditorOpen} note={activeNote} setShouldRefresh={setShouldRefresh}/>
       </div>
     );
   }
