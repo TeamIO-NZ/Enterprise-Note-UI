@@ -82,16 +82,14 @@ export default function EditDialog({ open, setOpen, note, setShouldRefresh }: { 
   const [desc, setDesc] = React.useState<string>(note.desc);
   const [data, setData] = React.useState<string>(JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent())));
   const { user, setUser } = useUser();          //set user context. important for passing the user around the components     
+
   const handleClose = () => {
-    setOpen(false);
-    // request refresh
     setShouldRefresh(String(Date.now())); // get epoch so it updates the var, refreshing the notes list
+    setOpen(false);
   };
 
   const handleContentChange = (event: EditorState) => {
-    console.log(`current state: ${JSON.stringify(convertToRaw(event.getCurrentContent()))}`);
-    setContent(btoa(JSON.stringify(convertToRaw(event.getCurrentContent())))); // store to temp state
-    
+    setContent(btoa(JSON.stringify(convertToRaw(event.getCurrentContent()))));
   }
 
   const handleTitleChange = (e: any) => {
@@ -112,29 +110,23 @@ export default function EditDialog({ open, setOpen, note, setShouldRefresh }: { 
     if (note.content == "") {
       console.log("fuckin empty")
       note.content = btoa(JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent())));
-      // console.log(`start: ${JSON.stringify(convertToRaw(EditorState.createEmpty().getCurrentContent()))}`);
     } else {
       console.log("not empty")
     }
-    // console.log(`end: ${JSON.stringify(atob(note.content))}`);
-
-    // consolelog(atob(note.content));
-    // console.log("{\"blocks\":[{\"key\":\"6u35f\",\"text\":\"test big boi\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}");
-
-   setData(atob(note.content));
-  // setData("{\"blocks\":[{\"key\":\"6u35f\",\"text\":\"test big boi\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}")
-    // console.log("{\"blocks\":[{\"key\":\"6u35f\",\"text\":\"test big boi\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}" === JSON.stringify(atob(note.content)))
-  }, [note.content])
+    setData(atob(note.content));
+    setTitle(note.title);
+    setDesc(note.desc);
+  }, [note])
 
   const handleSave = () => {
     note.title = title;
     note.desc = desc;
     note.content = content;
 
-    if (typeof(note.id) === 'number' && note.id > 0) {
-      NoteDataService.update(note.id, note);
-    } {
-      NoteDataService.create(note).then((res) => {console.log(`create: ${res}`)});
+    if (typeof (note.id) === 'number' && note.id > 0) {
+      NoteDataService.update(note.id, note, user.id);
+    } else {
+      NoteDataService.create(note).then((res) => { console.log(`create: ${res}`) });
     }
   };
 
@@ -147,7 +139,6 @@ export default function EditDialog({ open, setOpen, note, setShouldRefresh }: { 
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              {/* <TextField placeholder="Title" onChange={(e: any) => setTitle(e.target.value)} /> <TextField placeholder="Summary" onChange={(e: any) => setDesc(e.target.value)} /> */}
               <div className={classes.search}>
                 <div className={classes.searchIcon}>
                   <Title />
@@ -180,7 +171,7 @@ export default function EditDialog({ open, setOpen, note, setShouldRefresh }: { 
               </div>
 
             </Typography>
-            <Button autoFocus color="inherit" onClick={() => saveAndClose()}>
+            <Button color="inherit" onClick={() => saveAndClose()}>
               save
             </Button>
           </Toolbar>
