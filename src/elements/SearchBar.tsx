@@ -1,5 +1,11 @@
-import { TextField, MenuItem, Grid } from '@material-ui/core'
+import { TextField, MenuItem, Grid, makeStyles, createStyles, Theme } from '@material-ui/core'
 import React from 'react'
+
+const useStyles = makeStyles((theme: Theme) => createStyles({
+    search: {
+        width: '75%'
+    }
+}));
 
 const searchTypes = [
     {
@@ -25,6 +31,7 @@ const searchTypes = [
 ]
 
 export default function SearchBar() {
+    const classes = useStyles();
     const [searchType, setSearchType] = React.useState("regex")
     const [searchLock, setSearchLock] = React.useState(false);
     const [searchCount] = React.useState(0);
@@ -40,7 +47,7 @@ export default function SearchBar() {
       }
     return (
         <Grid>
-            <TextField id="standard-basic" label="Search..." disabled={searchLock} />
+            <TextField id="standard-basic" label="Search..." disabled={searchLock} className={classes.search}/>
             <TextField
                 id="standard-select-searchType"
                 select

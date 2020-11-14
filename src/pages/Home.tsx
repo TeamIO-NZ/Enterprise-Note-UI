@@ -41,23 +41,16 @@ export default function Home() {
   const { user } = useUser();
   const history = useHistory();
   const classes = useStyles();
-  const [] = React.useState(false);
-  const [] = React.useState<Array<Note>>([]);
-  const [] = React.useState(false);
+  const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [editorOpen, setEditorOpen] = React.useState(false);
-  const [] = React.useState<string | false>(false);
 
   const [activeNote, setActiveNote] = React.useState(new Note(0, "", "", "", user.id, [], []));
-  const [, setShouldRefresh] = React.useState("change-me-to-refresh");
+  const [shouldRefresh, setShouldRefresh] = React.useState("change-me-to-refresh");
 
   const handleCreateNew = () => {
     setActiveNote(new Note(0, "", "", "", user.id, [], []));
     setEditorOpen(true);
   }
-  useEffect(() => {
-
-
-  }, []);
 
   if (!user.loggedIn) {
     history.push("/login")
@@ -75,21 +68,35 @@ export default function Home() {
         alignItems="center"
       >
         <Grid item xs={9} md={9}>
-          <Grid container xs={9} alignItems="flex-end" alignContent="flex-end">
-            <Grid item xs={4}>
-            <Typography variant="h6" className={classes.title}>
-            Your Notes
+          <Grid
+          container
+          spacing={2}
+          direction="row"
+          justify="center"
+          alignItems="center">
+            <Grid item xs={3}>
+              <Typography variant="h6" className={classes.title}>
+                Your Notes
               <IconButton onClick={() => handleCreateNew()}><Add /></IconButton>
-          </Typography>
+              </Typography>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={6}>
               <SearchBar />
             </Grid>
-  
+            <Grid item xs={3}>
+            </Grid>
+
           </Grid>
         </Grid>
         <Grid item xs={9} md={9}>
-        <NotesList />
+          <NotesList 
+            shouldRefresh={shouldRefresh} 
+            setShouldRefresh={setShouldRefresh} 
+            notes={notes}
+            setNotes={setNotes}
+            setActiveNote={setActiveNote}
+            setEditorOpen={setEditorOpen}
+            />
         </Grid>
       </Grid>
 

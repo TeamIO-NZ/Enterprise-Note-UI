@@ -66,16 +66,26 @@ function generate(element: React.ReactElement, notes: Array<Note>, { expanded, h
     ),
     );
 }
-export default function NotesList() {
+export default function NotesList({
+    shouldRefresh, 
+    setShouldRefresh,
+    notes,
+    setNotes,
+    setActiveNote,
+    setEditorOpen
+
+}: {
+    shouldRefresh: string, 
+    setShouldRefresh: React.Dispatch<React.SetStateAction<string>>,
+    notes: Array<Note>,
+    setNotes: React.Dispatch<React.SetStateAction<Array<Note>>>,
+    setActiveNote: React.Dispatch<React.SetStateAction<Note>>,
+    setEditorOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
     const { user } = useUser();
-    const history = useHistory();
     const classes = useStyles();
     const [dense] = React.useState(false);
     const [expanded, setExpanded] = React.useState<string | false>(false);
-    const [activeNote, setActiveNote] = React.useState(new Note(0, "", "", "", user.id, [], []));
-    const [editorOpen, setEditorOpen] = React.useState(false);
-    const [shouldRefresh, setShouldRefresh] = React.useState("change-me-to-refresh");
-    const [notes, setNotes] = React.useState<Array<Note>>([]);
     const isMounted = useIsMounted();
     const [isLoaded, setIsLoaded] = React.useState(false);
 
