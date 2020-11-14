@@ -95,7 +95,7 @@ export default function Login() {
             console.log(token);
             var decoded = atob(userInfo.token)
             if (decoded === username + password) {
-              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId));
+              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId, userInfo.usersettings));
               history.push("/");
             }
           } else {

@@ -16,3 +16,10 @@ Front end settings
 |Access screen has a dropdown of all the users and a radio button for no access, viewer, editor|[]|
 |Search bar for filtering and counting|[]|
 |User List Page|[x]||
+|ability to filter notes you can access|[]|
+|Users can count occurences of the following among notes they have access to|[]|
+|A sentence with a given prefix or suffix|[]|
+|A phone number with a give area code and/or consecutive number pattern|[]|
+|An email address on a domain that is only partially provided|[]|
+|Text that contains at least three of the following case sensitive words. [meeting, minutes, agenda, action, attendees, apologies]|[]|
+|A 3+ letter word thats all caps|[]|

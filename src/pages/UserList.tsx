@@ -98,7 +98,7 @@ export default function Home() {
         var n: Array<User> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
-          n.push(new User(element.name, "", false, "", element.email, element.gender, element.userId));
+          n.push(new User(element.name, "", false, "", element.email, element.gender, element.userId,-1));
         });
         return n;
       })
