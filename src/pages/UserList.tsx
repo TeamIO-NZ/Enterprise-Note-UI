@@ -55,7 +55,7 @@ function generate(element: React.ReactElement, users: Array<User>, { expanded, h
           <Typography className={classes.secondaryHeading}>{user.email}</Typography>
         </AccordionSummary>
         <AccordionActions>
-          <Tooltip title={"Delete User"}><IconButton onClick={ () => deleteUser(user.id)} size="small"><Delete /></IconButton></Tooltip>
+          <Tooltip title={"Delete User"}><IconButton onClick={() => deleteUser(user.id)} size="small"><Delete /></IconButton></Tooltip>
           <Tooltip title={"Edit User"}><IconButton size="small"><Edit /></IconButton></Tooltip>
         </AccordionActions>
         <Divider />
@@ -83,7 +83,7 @@ export default function Home() {
 
   const deleteUser = (userId: number) => {
     console.log("Click")
-    UserServices.delete(userId).then((response) =>{
+    UserServices.delete(userId).then((response) => {
       console.log(response);
       setShouldRefresh(String(Date.now()));
 
@@ -98,7 +98,7 @@ export default function Home() {
         var n: Array<User> = [];
         if (data === undefined || data === null) return [];
         data.forEach((element: any) => {
-          n.push(new User(element.name, "", false, "", element.email, element.gender, element.userId,-1));
+          n.push(new User(element.name, "", false, "", element.email, element.gender, element.userId, -1));
         });
         return n;
       })

@@ -34,7 +34,7 @@ class NoteDataService {
   async getData(userId: number) {
     //console.log("Getting Data");
     return await this.getAllUserHasAccessTo(userId).then(response => {
-        return response.data;
+      return response.data;
     });
   };
 }

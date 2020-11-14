@@ -63,18 +63,18 @@ export default function ShareDialog(props: ShareDialogProps) {
   const [users, setUsers] = React.useState<Array<{ userId: number, name: string, role: Role }>>([]);
   const isMounted = useIsMounted();
 
-  if(note.editors == null) {
+  if (note.editors == null) {
     note.editors = [0];
   }
 
-  if(note.viewers ==  null) {
+  if (note.viewers == null) {
     note.viewers = [0];
   }
 
   useEffect(() => {
     if (isMounted()) {
       console.log("use effect");
-      
+
       UserServices.getAll()
         .then((res: any) => {
           console.log(res)
@@ -118,7 +118,7 @@ export default function ShareDialog(props: ShareDialogProps) {
   };
 
   const handleRadioChange = (e: React.ChangeEvent<{ name?: string | undefined, value: unknown }>, user: { userId: number, name: string, role: Role }) => {
-    if(note.owner === user.userId) { return; }
+    if (note.owner === user.userId) { return; }
     let ul: Array<{ userId: number, name: string, role: Role }> = Object.assign([], users);
     clearUserRoles(ul[ul.indexOf(user)]);
     if (e.target.value == Role.None) {
@@ -143,67 +143,67 @@ export default function ShareDialog(props: ShareDialogProps) {
   return (
     <Dialog onClose={handleClose} aria-labelledby="share-dialog-title" open={open}>
       <DialogTitle id="share-dialog-title">Share Note</DialogTitle>
-        <List>
+      <List>
         <ListItem key="fuck">
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  <People />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText className={classes.listText} ><b>Users</b></ListItemText>
-              <ListItemSecondaryAction>
-                <Typography>
-                  <b>Roles</b>
-                </Typography>
-              </ListItemSecondaryAction>
-            </ListItem>
-          {users.map((user: { userId: number, name: string, role: Role }) => (
-            <ListItem key={`${user.userId}-${user.name}`}>
-              <ListItemAvatar>
-                <Avatar className={classes.avatar}>
-                  {user.name.charAt(0).toUpperCase()}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={user.name} className={classes.listText} />
-              <ListItemSecondaryAction>
-                <Tooltip title={Role.None}>
-                  <Radio
-                    checked={user.role == Role.None}
-                    onChange={(e) => handleRadioChange(e, user)}
-                    value={Role.None}
-                    color="default"
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-label': Role.None }}
-                    disabled={user.userId === note.owner}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={Role.Viewer}>
-                  <Radio
-                    checked={user.role == Role.Viewer}
-                    onChange={(e) => handleRadioChange(e, user)}
-                    value={Role.Viewer}
-                    color="default"
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-label': Role.Viewer }}
-                    disabled={user.userId === note.owner}
-                    size="small"
-                  />
-                </Tooltip>
-                <Tooltip title={Role.Editor}>
-                  <Radio
-                    checked={user.role == Role.Editor}
-                    onChange={(e) => handleRadioChange(e, user)}
-                    value={Role.Editor}
-                    color="default"
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-label': Role.Editor }}
-                    disabled={user.userId === note.owner}
-                    size="small"
-                  />
-                </Tooltip>
+          <ListItemAvatar>
+            <Avatar className={classes.avatar}>
+              <People />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText className={classes.listText} ><b>Users</b></ListItemText>
+          <ListItemSecondaryAction>
+            <Typography>
+              <b>Roles</b>
+            </Typography>
+          </ListItemSecondaryAction>
+        </ListItem>
+        {users.map((user: { userId: number, name: string, role: Role }) => (
+          <ListItem key={`${user.userId}-${user.name}`}>
+            <ListItemAvatar>
+              <Avatar className={classes.avatar}>
+                {user.name.charAt(0).toUpperCase()}
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={user.name} className={classes.listText} />
+            <ListItemSecondaryAction>
+              <Tooltip title={Role.None}>
+                <Radio
+                  checked={user.role == Role.None}
+                  onChange={(e) => handleRadioChange(e, user)}
+                  value={Role.None}
+                  color="default"
+                  name="radio-button-demo"
+                  inputProps={{ 'aria-label': Role.None }}
+                  disabled={user.userId === note.owner}
+                  size="small"
+                />
+              </Tooltip>
+              <Tooltip title={Role.Viewer}>
+                <Radio
+                  checked={user.role == Role.Viewer}
+                  onChange={(e) => handleRadioChange(e, user)}
+                  value={Role.Viewer}
+                  color="default"
+                  name="radio-button-demo"
+                  inputProps={{ 'aria-label': Role.Viewer }}
+                  disabled={user.userId === note.owner}
+                  size="small"
+                />
+              </Tooltip>
+              <Tooltip title={Role.Editor}>
+                <Radio
+                  checked={user.role == Role.Editor}
+                  onChange={(e) => handleRadioChange(e, user)}
+                  value={Role.Editor}
+                  color="default"
+                  name="radio-button-demo"
+                  inputProps={{ 'aria-label': Role.Editor }}
+                  disabled={user.userId === note.owner}
+                  size="small"
+                />
+              </Tooltip>
 
-                {/* <FormControl className={classes.formControl}>
+              {/* <FormControl className={classes.formControl}>
                   <InputLabel id={`role-label-${user.userId}`}>Name</InputLabel>
                   <Select
                     labelId={`role-label-${user.userId}`}
@@ -223,10 +223,10 @@ export default function ShareDialog(props: ShareDialogProps) {
                     )
                   }
                 </FormControl> */}
-              </ListItemSecondaryAction>
-            </ListItem>
-          ))}
-        </List>
+            </ListItemSecondaryAction>
+          </ListItem>
+        ))}
+      </List>
     </Dialog>
   );
 }

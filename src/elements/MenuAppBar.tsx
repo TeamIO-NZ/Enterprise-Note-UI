@@ -44,14 +44,14 @@ export default function MenuAppBar() {
   const handleLogin = () => {
     history.push("/login");
   }
-  const handleUserListPush = () =>{
+  const handleUserListPush = () => {
     history.push("/users");
   }
-  const handleMyNotesPush = () =>{
+  const handleMyNotesPush = () => {
     history.push("/");
   }
   const handleLogout = () => {
-    setUser(new User("", "", false, "","","",-1,-1));
+    setUser(new User("", "", false, "", "", "", -1, -1));
     history.push("/login");
   }
 
@@ -71,9 +71,9 @@ export default function MenuAppBar() {
           {user.token !== "" && (
             <div>
               <Avatar
-              aria-label={`account of ${user.name}`}
-              aria-controls="menu-appbar"
-              onClick={handleMenu}
+                aria-label={`account of ${user.name}`}
+                aria-controls="menu-appbar"
+                onClick={handleMenu}
               >
                 {user.name.charAt(0).toUpperCase()}
               </Avatar>
@@ -92,9 +92,9 @@ export default function MenuAppBar() {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={() => {handleMyNotesPush(); handleClose()}}>My Notes</MenuItem>
-                <MenuItem onClick={() => {handleUserListPush();handleClose()}}>UserList</MenuItem>
-                <MenuItem onClick={() => {handleLogout();handleClose();}}>Logout</MenuItem>
+                <MenuItem onClick={() => { handleMyNotesPush(); handleClose() }}>My Notes</MenuItem>
+                <MenuItem onClick={() => { handleUserListPush(); handleClose() }}>UserList</MenuItem>
+                <MenuItem onClick={() => { handleLogout(); handleClose(); }}>Logout</MenuItem>
               </Menu>
             </div>
           )}

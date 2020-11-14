@@ -72,11 +72,11 @@ export default function Home() {
       >
         <Grid item xs={9} md={9}>
           <Grid
-          container
-          spacing={2}
-          direction="row"
-          justify="center"
-          alignItems="center">
+            container
+            spacing={2}
+            direction="row"
+            justify="center"
+            alignItems="center">
             <Grid item xs={3}>
               <Typography variant="h6" className={classes.title}>
                 Your Notes
@@ -92,14 +92,14 @@ export default function Home() {
           </Grid>
         </Grid>
         <Grid item xs={9} md={9}>
-          <NotesList 
-            shouldRefresh={shouldRefresh} 
-            setShouldRefresh={setShouldRefresh} 
+          <NotesList
+            shouldRefresh={shouldRefresh}
+            setShouldRefresh={setShouldRefresh}
             notes={notes}
             setNotes={setNotes}
             setActiveNote={setActiveNote}
             setEditorOpen={setEditorOpen}
-            />
+          />
         </Grid>
       </Grid>
 

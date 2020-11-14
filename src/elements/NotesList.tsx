@@ -177,7 +177,7 @@ export default function NotesList({
             }
           )}
         </List>
-        <ShareDialog open={openShare} onClose={() => setOpenShare(false)} note={note} requestRefresh={setShouldRefresh}/>
+        <ShareDialog open={openShare} onClose={() => setOpenShare(false)} note={note} requestRefresh={setShouldRefresh} />
       </>
     );
   }

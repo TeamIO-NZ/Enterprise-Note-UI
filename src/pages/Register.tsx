@@ -136,7 +136,7 @@ export default function Register() {
             var decoded = atob(userInfo.token)
             if (decoded === username + password) {
               console.log("Time to login");
-              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId,-1));
+              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId, -1));
               console.log(user);
               console.log("Time to push to home")
               history.push("/")

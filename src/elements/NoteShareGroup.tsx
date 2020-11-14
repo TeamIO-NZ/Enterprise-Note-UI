@@ -44,7 +44,7 @@ export default function NoteShareGroup({ note }: { note: Note }) {
         if (data === undefined || data === null) return [];
         //console.log(data.data) 
         var u = data.data;
-        n.push(new User(u.name, "", false, "", "", "", u.userId,-1));
+        n.push(new User(u.name, "", false, "", "", "", u.userId, -1));
 
         return n;
       })
@@ -61,7 +61,7 @@ export default function NoteShareGroup({ note }: { note: Note }) {
               if (res.data.data) {
                 var userInfo = res.data.data;
                 let e = editors;
-                e.push(new User(userInfo.name, "", false, "", "", "", userInfo.userId,-1));
+                e.push(new User(userInfo.name, "", false, "", "", "", userInfo.userId, -1));
                 setEditors(e);
                 console.log(e);
               }
@@ -77,7 +77,7 @@ export default function NoteShareGroup({ note }: { note: Note }) {
               if (res.data.data) {
                 var userInfo = res.data.data;
                 let v = viewers;
-                v.push(new User(userInfo.name, "", false, "", "", "", userInfo.userId,-1));
+                v.push(new User(userInfo.name, "", false, "", "", "", userInfo.userId, -1));
                 setViewers(v);
                 console.log(v);
               }
@@ -92,25 +92,25 @@ export default function NoteShareGroup({ note }: { note: Note }) {
 
 
     //grid container half
-      <Grid container spacing={3}  alignItems="stretch" justify="flex-start">
-        <Grid item xs={3} sm={3}>
-          <Typography >Owner</Typography>
-          {
-            genGroup(owner)
-          }
-        </Grid>
-        <Grid item xs={3} sm={3}>
-          <Typography >Editors</Typography>
-          {
-            genGroup(editors)
-          }
-        </Grid>
-        <Grid item xs={3} sm={3}>
-          <Typography >Viewer</Typography>
-          {
-            genGroup(viewers)
-          }
-        </Grid>
+    <Grid container spacing={3} alignItems="stretch" justify="flex-start">
+      <Grid item xs={3} sm={3}>
+        <Typography >Owner</Typography>
+        {
+          genGroup(owner)
+        }
       </Grid>
+      <Grid item xs={3} sm={3}>
+        <Typography >Editors</Typography>
+        {
+          genGroup(editors)
+        }
+      </Grid>
+      <Grid item xs={3} sm={3}>
+        <Typography >Viewer</Typography>
+        {
+          genGroup(viewers)
+        }
+      </Grid>
+    </Grid>
   );
 };

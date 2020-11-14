@@ -39,7 +39,7 @@ export default function ConnectionWarning() {
   return (
     <div className={classes.root}>
       <Collapse in={show}>
-      <Alert severity="error">Connection to backend lost, attempting to reconnect.</Alert>
+        <Alert severity="error">Connection to backend lost, attempting to reconnect.</Alert>
       </Collapse>
     </div>
   )
