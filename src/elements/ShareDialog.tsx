@@ -87,6 +87,14 @@ export default function ShareDialog(props: ShareDialogProps) {
   }, [note]);
 
   const getRole = (uId: number): Role => {
+    if(note.editors == null) {
+      note.editors = [0];
+    }
+
+    if(note.viewers ==  null) {
+      note.viewers = [0];
+    }
+
     if (note.owner == uId) {
       return Role.Owner;
     } else if (note.editors.includes(uId)) {

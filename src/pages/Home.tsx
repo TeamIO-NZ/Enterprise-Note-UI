@@ -44,7 +44,7 @@ export default function Home() {
   const [notes, setNotes] = React.useState<Array<Note>>([]);
   const [editorOpen, setEditorOpen] = React.useState(false);
 
-  const [activeNote, setActiveNote] = React.useState(new Note(0, "", "", "", user.id, [], []));
+  const [activeNote, setActiveNote] = React.useState(new Note(0, "", "", "", user.id, [0], [0]));
   const [shouldRefresh, setShouldRefresh] = React.useState("change-me-to-refresh");
 
   const handleCreateNew = () => {
