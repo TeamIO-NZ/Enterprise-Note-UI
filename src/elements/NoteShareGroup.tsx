@@ -89,34 +89,28 @@ export default function NoteShareGroup({ note }: { note: Note }) {
   }, [note]);
 
   return (
-    <Grid item xs={12}>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item xs={2}>
+
+
+    //grid container half
+      <Grid container spacing={3}  alignItems="stretch" justify="flex-start">
+        <Grid item xs={3} sm={3}>
           <Typography >Owner</Typography>
-        </Grid>
-        <Grid item xs={1}>
           {
             genGroup(owner)
           }
         </Grid>
-        <Grid xs={1}></Grid>
-        <Grid item xs={1} md={2}>
+        <Grid item xs={3} sm={3}>
           <Typography >Editors</Typography>
-        </Grid>
-        <Grid item xs={3} md={2}>
           {
             genGroup(editors)
           }
         </Grid>
-        <Grid item xs={1} md={2}>
-          <Typography >Viewers</Typography>
-        </Grid>
-        <Grid item xs={3} md={2}>
+        <Grid item xs={3} sm={3}>
+          <Typography >Viewer</Typography>
           {
             genGroup(viewers)
           }
         </Grid>
       </Grid>
-    </Grid>
   );
 };
