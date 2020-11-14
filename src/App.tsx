@@ -11,7 +11,7 @@ import UserList from './pages/UserList';
 import ConnectionWarning from './elements/ConnectionWarning';
 
 function App() {
-  const [user, setUser] = React.useState<User>(new User("", "", false, "", "", "", -1));
+  const [user, setUser] = React.useState<User>(new User("", "", false, "", "", "", -1, -1));
   console.log("App Level User:");
   console.log(user);
   return (

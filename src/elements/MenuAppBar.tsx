@@ -51,7 +51,7 @@ export default function MenuAppBar() {
     history.push("/");
   }
   const handleLogout = () => {
-    setUser(new User("", "", false, "","","",-1));
+    setUser(new User("", "", false, "","","",-1,-1));
     history.push("/login");
   }
 

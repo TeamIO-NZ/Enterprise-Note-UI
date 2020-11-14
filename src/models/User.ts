@@ -1,5 +1,5 @@
 export default class User{
-    constructor(name:string,password:string,loggedIn:boolean,token:string, email:string,gender:string,id:number){
+    constructor(name:string,password:string,loggedIn:boolean,token:string, email:string,gender:string,id:number, userSettings:number){
         this.name = name;
         this.password = password;
         this.loggedIn = loggedIn;
@@ -7,6 +7,7 @@ export default class User{
         this.email = email;
         this.gender = gender;
         this.id = id;
+        this.userSettings = userSettings
     }
     name:string;
     password:string;
@@ -15,4 +16,5 @@ export default class User{
     email:string;
     gender:string;
     id:number
+    userSettings:number
 }
