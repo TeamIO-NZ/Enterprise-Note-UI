@@ -19,6 +19,7 @@ import UserServices from '../services/UserServices';
 import { useIsMounted } from 'react-tidy';
 import { isNullOrUndefined } from 'util';
 import { People } from '@material-ui/icons';
+import UserSettingService from '../services/UserSettingService';
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
         marginLeft: 40
       },
       listText: {
-        marginRight: 200
+        marginRight: 250
       },
       formControl: {
         margin: theme.spacing(1),
@@ -62,6 +63,7 @@ export default function ShareDialog(props: ShareDialogProps) {
   const { onClose, open, note, requestRefresh } = props;
   const [users, setUsers] = React.useState<Array<{ userId: number, name: string, role: Role }>>([]);
   const isMounted = useIsMounted();
+  const [refreshCauseImLazy, setRefreshCauseImLazy] = React.useState("fucking work m8");
 
   if (note.editors == null) {
     note.editors = [0];
@@ -93,7 +95,7 @@ export default function ShareDialog(props: ShareDialogProps) {
         });
     }
 
-  }, [note]);
+  }, [note, refreshCauseImLazy]);
 
   const getRole = (uId: number): Role => {
     if (note.owner == uId) {
@@ -140,9 +142,39 @@ export default function ShareDialog(props: ShareDialogProps) {
     note.editors = note.editors.filter(id => id !== user.userId); // filter userId out of editors
   }
 
+  const handleSavePreset = () => {
+    UserSettingService.update(note.owner, {
+      editors: note.editors,
+      viewers: note.viewers, //TODO: james fix ya json names on the backend.
+    }).then((res) => {
+      console.log(res);
+    });
+  }
+
+  const handleLoadPreset = () => {
+    UserSettingService.get(note.owner)
+      .then((res) => {
+        console.log(res);
+        if(res.data.Editors == undefined) {
+          res.data.Editors = [];
+        }
+        if(res.data.Viewers == undefined) {
+          res.data.Viewers = [];
+        }
+        note.editors = res.data.Editors;
+        note.viewers = res.data.Viewers;
+
+        setRefreshCauseImLazy(String(Date.now()));
+      });
+  }
+
   return (
     <Dialog onClose={handleClose} aria-labelledby="share-dialog-title" open={open}>
-      <DialogTitle id="share-dialog-title">Share Note</DialogTitle>
+      <DialogTitle id="share-dialog-title">
+        Share Note
+        <Button className={classes.actions} onClick={() => handleSavePreset()}>Save Preset</Button>
+        <Button onClick={() => handleLoadPreset()}>Load Preset</Button>
+      </DialogTitle>
       <List>
         <ListItem key="fuck">
           <ListItemAvatar>
