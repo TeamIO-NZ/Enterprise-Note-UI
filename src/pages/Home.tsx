@@ -52,11 +52,14 @@ export default function Home() {
     setEditorOpen(true);
   }
 
+  useEffect(() => {
+    console.log("home refresh");
+  }, [shouldRefresh]);
+
   if (!user.loggedIn) {
     history.push("/login")
     return <div></div>;
   }
-
 
   return (
     <div className={classes.root}>

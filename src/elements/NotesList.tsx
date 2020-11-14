@@ -131,6 +131,7 @@ export default function NotesList({
     });
   }
   useEffect(() => {
+    console.log('list refresh');
     setIsLoaded(false);
     NoteServices.getData(user.id)
       .then(data => {
