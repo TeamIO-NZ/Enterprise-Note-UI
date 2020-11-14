@@ -63,9 +63,18 @@ export default function ShareDialog(props: ShareDialogProps) {
   const [users, setUsers] = React.useState<Array<{ userId: number, name: string, role: Role }>>([]);
   const isMounted = useIsMounted();
 
+  if(note.editors == null) {
+    note.editors = [0];
+  }
+
+  if(note.viewers ==  null) {
+    note.viewers = [0];
+  }
+
   useEffect(() => {
     if (isMounted()) {
       console.log("use effect");
+      
       UserServices.getAll()
         .then((res: any) => {
           console.log(res)
@@ -87,14 +96,6 @@ export default function ShareDialog(props: ShareDialogProps) {
   }, [note]);
 
   const getRole = (uId: number): Role => {
-    if(note.editors == null) {
-      note.editors = [0];
-    }
-
-    if(note.viewers ==  null) {
-      note.viewers = [0];
-    }
-
     if (note.owner == uId) {
       return Role.Owner;
     } else if (note.editors.includes(uId)) {
@@ -108,6 +109,7 @@ export default function ShareDialog(props: ShareDialogProps) {
   }
 
   const handleClose = () => {
+    console.log(note)
     NoteServices.update(note.id, note, note.owner).then(() => {
       requestRefresh(String(Date.now()));
       onClose();
@@ -116,13 +118,17 @@ export default function ShareDialog(props: ShareDialogProps) {
   };
 
   const handleRadioChange = (e: React.ChangeEvent<{ name?: string | undefined, value: unknown }>, user: { userId: number, name: string, role: Role }) => {
+    if(note.owner === user.userId) { return; }
     let ul: Array<{ userId: number, name: string, role: Role }> = Object.assign([], users);
+    clearUserRoles(ul[ul.indexOf(user)]);
     if (e.target.value == Role.None) {
       ul[ul.indexOf(user)].role = Role.None
     } else if (e.target.value == Role.Viewer) {
       ul[ul.indexOf(user)].role = Role.Viewer
+      note.viewers.push(user.userId);
     } else if (e.target.value == Role.Editor) {
       ul[ul.indexOf(user)].role = Role.Editor
+      note.editors.push(user.userId);
     }
     setUsers(ul);
   }
