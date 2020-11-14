@@ -10,7 +10,7 @@ class UserSettingsDataService {
     return http.post("/usersettings", data);
   }
 
-  update(id: number, data: any, uId: number) {
+  update(id: number, data: any) {
     return http.put(`/usersettings/${id}`, data);
   }
 
