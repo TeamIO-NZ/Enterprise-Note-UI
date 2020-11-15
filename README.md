@@ -17,7 +17,7 @@ Front end settings
 |Search bar for filtering and counting|[x]|
 |User List Page|[x]||
 |ability to filter notes you can access|[x]|
-|Users can count occurences of the following among notes they have access to|[x]|
+|Users can count occurrence of the following among notes they have access to|[x]|
 |A sentence with a given prefix or suffix|[x]|
 |A phone number with a give area code and/or consecutive number pattern|[x]|
 |An email address on a domain that is only partially provided|[x]|
