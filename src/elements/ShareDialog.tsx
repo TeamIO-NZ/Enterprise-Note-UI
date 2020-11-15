@@ -82,7 +82,7 @@ export default function ShareDialog(props: ShareDialogProps) {
           if (isMounted()) {
             setUsers([]);
             let ul: Array<{ userId: number, name: string, role: Role }> = [];
-            res.data.forEach((u: any) => {
+            res.data.data.forEach((u: any) => {
               ul.push({
                 name: u.name,
                 userId: u.userId,

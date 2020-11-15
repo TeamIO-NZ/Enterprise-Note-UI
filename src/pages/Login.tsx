@@ -89,8 +89,8 @@ export default function Login() {
       .then((response: any) => {
         if (isMounted()) {
           setWaiting(false);
-          if (response.data.data) {
-            var userInfo = response.data.data;
+          var userInfo = response.data.data.data;
+          if (userInfo) {
             var token = userInfo.token;
             console.log(token);
             var decoded = atob(userInfo.token)

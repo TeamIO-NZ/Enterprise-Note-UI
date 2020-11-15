@@ -136,8 +136,8 @@ export default function NotesList({
     NoteServices.getData(user.id)
       .then(data => {
         var n: Array<Note> = [];
-        if (data === undefined || data === null) return [];
-        data.forEach((element: any) => {
+        if (data.data === undefined || data.data === null) return [];
+        data.data.forEach((element: any) => {
           console.log(element.id)
           n.push(new Note(element.id, element.title, element.desc, element.content, element.owner, element.viewers, element.editors));
         });

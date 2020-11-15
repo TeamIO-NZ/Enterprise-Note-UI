@@ -96,8 +96,8 @@ export default function Home() {
     UserServices.getData()
       .then(data => {
         var n: Array<User> = [];
-        if (data === undefined || data === null) return [];
-        data.forEach((element: any) => {
+        if (data.data === undefined || data.data === null) return [];
+        data.data.forEach((element: any) => {
           n.push(new User(element.name, "", false, "", element.email, element.gender, element.userId, -1));
         });
         return n;

@@ -64,7 +64,7 @@ export default function Register() {
       let name = e.target.value.toLowerCase();
       UserService.getByName(name)
         .then((res) => {
-          if (res.data.name === "") { // user not in use
+          if (res.data.data.name === "") { // user not in use
             setUsername(name);
             setUsernameInvalid(false);
           } else {
@@ -81,7 +81,7 @@ export default function Register() {
       let email = e.target.value.toLowerCase();
       UserService.getByEmail(email)
         .then((res) => {
-          if (res.data.email === "") {
+          if (res.data.data.email === "") {
             setEmail(email);
             setEmailInvalid(false);
           } else {
@@ -130,7 +130,7 @@ export default function Register() {
           .then((response: any) => {
             console.log("login response")
             console.log(response)
-            var userInfo = response.data.data;
+            var userInfo = response.data.data.data;
             var token = userInfo.token;
             console.log(token);
             var decoded = atob(userInfo.token)

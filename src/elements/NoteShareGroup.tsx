@@ -52,9 +52,9 @@ export default function NoteShareGroup({ note }: { note: Note }) {
       .then(data => {
         console.log(data)
         var n: Array<User> = [];
-        if (data === undefined || data === null) return [];
+        if (data.data === undefined || data.data === null) return [];
         //console.log(data.data) 
-        var u = data.data;
+        var u = data.data.data;
         n.push(new User(u.name, "", false, "", "", "", u.userId, -1));
 
         return n;
@@ -74,7 +74,7 @@ export default function NoteShareGroup({ note }: { note: Note }) {
           UserServices.get(id)
             .then((res) => {
               if (isMounted()) {
-                let user = res.data;
+                let user = res.data.data;
                 e.push(new User(user.name, "", false, "", "", "", user.userId, -1));
                 setEditors(e);
               }
@@ -92,7 +92,7 @@ export default function NoteShareGroup({ note }: { note: Note }) {
           UserServices.get(id)
             .then((res) => {
               if (isMounted()) {
-                let user = res.data;
+                let user = res.data.data;
                 v.push(new User(user.name, "", false, "", "", "", user.userId, -1));
                 setViewers(v);
               }
