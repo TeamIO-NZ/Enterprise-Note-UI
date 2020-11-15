@@ -7,7 +7,7 @@ class UserSettingsDataService {
     return http.get(`/usersettings/${id}`);
   }
   create(data: any) {
-    return http.post("/usersettings", data);
+    return http.post(`/usersettings`, data);
   }
 
   update(id: number, data: any) {

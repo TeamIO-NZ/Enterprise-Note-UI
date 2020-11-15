@@ -25,7 +25,6 @@ export default function NoteShareGroup({ note }: { note: Note }) {
 
   const genGroup = (users: Array<User>): any => {
     if (users.length > 0) {
-      console.log(`user:${users[0].name}`)
       return (
 
         <AvatarGroup max={4} classes={{avatar: classes.avatar}}>

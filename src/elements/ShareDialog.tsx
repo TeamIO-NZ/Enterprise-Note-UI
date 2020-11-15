@@ -48,6 +48,7 @@ export interface ShareDialogProps {
   open: boolean;
   onClose: () => void;
   note: Note;
+  setNote: Function;
   requestRefresh: Function;
 }
 
@@ -60,23 +61,21 @@ export enum Role {
 
 export default function ShareDialog(props: ShareDialogProps) {
   const classes = useStyles();
-  const { onClose, open, note, requestRefresh } = props;
+  const { onClose, open, note, setNote, requestRefresh } = props;
   const [users, setUsers] = React.useState<Array<{ userId: number, name: string, role: Role }>>([]);
   const isMounted = useIsMounted();
   const [refreshCauseImLazy, setRefreshCauseImLazy] = React.useState("fucking work m8");
 
   if (note.editors == null) {
-    note.editors = [0];
+    note.editors = [];
   }
 
   if (note.viewers == null) {
-    note.viewers = [0];
+    note.viewers = [];
   }
 
   useEffect(() => {
     if (isMounted()) {
-      console.log("use effect");
-
       UserServices.getAll()
         .then((res: any) => {
           console.log(res)
@@ -90,6 +89,7 @@ export default function ShareDialog(props: ShareDialogProps) {
                 role: getRole(u.userId)
               });
             });
+            console.log(ul)
             setUsers(ul);
           }
         });
@@ -143,28 +143,46 @@ export default function ShareDialog(props: ShareDialogProps) {
   }
 
   const handleSavePreset = () => {
-    UserSettingService.update(note.owner, {
-      editors: note.editors,
-      viewers: note.viewers, //TODO: james fix ya json names on the backend.
-    }).then((res) => {
-      console.log(res);
-    });
+    UserSettingService.get(note.owner)
+      .then((res) => {
+        console.log(res)
+        return res.data.code == 400;
+      }).then((shouldCreate: boolean) => {
+        if (shouldCreate) {
+          UserSettingService.create({
+            editors: note.editors,
+            viewers: note.viewers,
+            id: note.owner
+          });
+        } else {
+          UserSettingService.update(note.owner, {
+            editors: note.editors,
+            viewers: note.viewers,
+          })
+        }
+      })
   }
 
   const handleLoadPreset = () => {
     UserSettingService.get(note.owner)
       .then((res) => {
-        console.log(res);
-        if(res.data.Editors == undefined) {
-          res.data.Editors = [];
-        }
-        if(res.data.Viewers == undefined) {
-          res.data.Viewers = [];
-        }
-        note.editors = res.data.Editors;
-        note.viewers = res.data.Viewers;
+        console.log(res)
+        if (res.data.code === 200) {
 
-        setRefreshCauseImLazy(String(Date.now()));
+          if (res.data.data.editors == undefined) {
+            res.data.data.editors = [];
+          }
+          if (res.data.data.viewers == undefined) {
+            res.data.data.viewers = [];
+          }
+          let n = Object.assign({}, note);
+          n.editors = res.data.data.editors;
+          n.viewers = res.data.data.viewers;
+
+          setNote(n);
+
+          setRefreshCauseImLazy(String(Date.now()));
+        }
       });
   }
 
