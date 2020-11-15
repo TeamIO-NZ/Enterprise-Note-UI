@@ -11,12 +11,12 @@ Front end settings
 |Home Page that shows all notes a user has access to|[x]|Pretty sure this is done|
 |Note access page/component for displaying note information|[x]|It looks pretty cool tbh|
 |Note edit button that allows changes with a submit button|[x]|
-|Note access change button that opens access screen|[]|
+|Note access change button that opens access screen|[x]|
 |Access screen has a list of users that can read and edit this note|[x]|I think this works. maybe?
-|Access screen has a dropdown of all the users and a radio button for no access, viewer, editor|[]|
+|Access screen has a dropdown of all the users and a radio button for no access, viewer, editor|[x]|
 |Search bar for filtering and counting|[]|
 |User List Page|[x]||
-|ability to filter notes you can access|[]|
+|ability to filter notes you can access|[x]|
 |Users can count occurences of the following among notes they have access to|[]|
 |A sentence with a given prefix or suffix|[]|
 |A phone number with a give area code and/or consecutive number pattern|[]|
