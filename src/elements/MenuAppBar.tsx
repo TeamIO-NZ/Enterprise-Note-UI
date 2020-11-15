@@ -12,6 +12,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Avatar } from '@material-ui/core';
 import { useUser } from '../services/Context';
 import User from '../models/User';
+import { blue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,6 +24,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+    },
+    avatar: {
+      backgroundColor: blue[100],
+      color: blue[600],
     },
   }),
 );
@@ -74,6 +79,7 @@ export default function MenuAppBar() {
                 aria-label={`account of ${user.name}`}
                 aria-controls="menu-appbar"
                 onClick={handleMenu}
+                className={classes.avatar}
               >
                 {user.name.charAt(0).toUpperCase()}
               </Avatar>
