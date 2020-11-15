@@ -14,12 +14,12 @@ Front end settings
 |Note access change button that opens access screen|[x]|
 |Access screen has a list of users that can read and edit this note|[x]|I think this works. maybe?
 |Access screen has a dropdown of all the users and a radio button for no access, viewer, editor|[x]|
-|Search bar for filtering and counting|[]|
+|Search bar for filtering and counting|[x]|
 |User List Page|[x]||
 |ability to filter notes you can access|[x]|
-|Users can count occurences of the following among notes they have access to|[]|
-|A sentence with a given prefix or suffix|[]|
-|A phone number with a give area code and/or consecutive number pattern|[]|
-|An email address on a domain that is only partially provided|[]|
-|Text that contains at least three of the following case sensitive words. [meeting, minutes, agenda, action, attendees, apologies]|[]|
-|A 3+ letter word thats all caps|[]|
+|Users can count occurences of the following among notes they have access to|[x]|
+|A sentence with a given prefix or suffix|[x]|
+|A phone number with a give area code and/or consecutive number pattern|[x]|
+|An email address on a domain that is only partially provided|[x]|
+|Text that contains at least three of the following case sensitive words. [meeting, minutes, agenda, action, attendees, apologies]|[x]|
+|A 3+ letter word thats all caps|[x]|
