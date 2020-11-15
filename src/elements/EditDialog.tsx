@@ -124,9 +124,9 @@ export default function EditDialog({ open, setOpen, note, setShouldRefresh }: { 
     note.content = content;
 
     if (typeof (note.id) === 'number' && note.id > 0) {
-      NoteDataService.update(note.id, note, user.id);
+      NoteDataService.update(note.id, note, user.id).then(() => { setShouldRefresh(String(Date.now())); });
     } else {
-      NoteDataService.create(note).then((res) => { console.log(`create: ${res}`) });
+      NoteDataService.create(note).then((res) => { console.log(`create: ${res}`) }).then(() => { setShouldRefresh(String(Date.now())); });
     }
   };
 

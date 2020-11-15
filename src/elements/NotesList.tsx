@@ -131,12 +131,13 @@ export default function NotesList({
     });
   }
   useEffect(() => {
+    console.log('list refresh');
     setIsLoaded(false);
     NoteServices.getData(user.id)
       .then(data => {
         var n: Array<Note> = [];
-        if (data === undefined || data === null) return [];
-        data.forEach((element: any) => {
+        if (data.data === undefined || data.data === null) return [];
+        data.data.forEach((element: any) => {
           console.log(element.id)
           n.push(new Note(element.id, element.title, element.desc, element.content, element.owner, element.viewers, element.editors));
         });
@@ -176,7 +177,7 @@ export default function NotesList({
             }
           )}
         </List>
-        <ShareDialog open={openShare} onClose={() => setOpenShare(false)} note={note} requestRefresh={setShouldRefresh}/>
+        <ShareDialog open={openShare} onClose={() => setOpenShare(false)} note={note} setNote={setNote} requestRefresh={setShouldRefresh} />
       </>
     );
   }

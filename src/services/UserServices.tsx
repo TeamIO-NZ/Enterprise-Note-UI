@@ -38,7 +38,7 @@ class UserDataService {
     console.log("Getting Data");
     return await this.getAll().then(response => {
       console.log(response);
-        return response.data;
+      return response.data;
     });
   };
 }

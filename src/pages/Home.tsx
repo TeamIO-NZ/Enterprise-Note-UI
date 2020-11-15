@@ -42,6 +42,7 @@ export default function Home() {
   const history = useHistory();
   const classes = useStyles();
   const [notes, setNotes] = React.useState<Array<Note>>([]);
+  const [displayed, setDisplayed] = React.useState<Array<Note>>([]);
   const [editorOpen, setEditorOpen] = React.useState(false);
 
   const [activeNote, setActiveNote] = React.useState(new Note(0, "", "", "", user.id, [0], [0]));
@@ -52,11 +53,14 @@ export default function Home() {
     setEditorOpen(true);
   }
 
+  useEffect(() => {
+    setDisplayed(notes);
+  }, [notes])
+
   if (!user.loggedIn) {
     history.push("/login")
     return <div></div>;
   }
-
 
   return (
     <div className={classes.root}>
@@ -69,11 +73,11 @@ export default function Home() {
       >
         <Grid item xs={9} md={9}>
           <Grid
-          container
-          spacing={2}
-          direction="row"
-          justify="center"
-          alignItems="center">
+            container
+            spacing={2}
+            direction="row"
+            justify="center"
+            alignItems="center">
             <Grid item xs={3}>
               <Typography variant="h6" className={classes.title}>
                 Your Notes
@@ -81,7 +85,10 @@ export default function Home() {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <SearchBar />
+              <SearchBar 
+                notes={notes}
+                setDisplayNotes={setDisplayed}
+              />
             </Grid>
             <Grid item xs={3}>
             </Grid>
@@ -89,14 +96,14 @@ export default function Home() {
           </Grid>
         </Grid>
         <Grid item xs={9} md={9}>
-          <NotesList 
-            shouldRefresh={shouldRefresh} 
-            setShouldRefresh={setShouldRefresh} 
-            notes={notes}
+          <NotesList
+            shouldRefresh={shouldRefresh}
+            setShouldRefresh={setShouldRefresh}
+            notes={displayed}
             setNotes={setNotes}
             setActiveNote={setActiveNote}
             setEditorOpen={setEditorOpen}
-            />
+          />
         </Grid>
       </Grid>
 

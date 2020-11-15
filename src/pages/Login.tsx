@@ -48,10 +48,10 @@ export default function Login() {
 
   //if user is logged in we dont need to be here. go to the notes page
   if (user.id !== -1) {
-    if(isMounted()) {
+    if (isMounted()) {
       history.push("/");
     }
-    
+
   }
   console.log("Before Handles");
   //check username for white space and denies validity if it has it
@@ -77,7 +77,7 @@ export default function Login() {
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
-    
+
     e.preventDefault();
     processJsonResponse(user.name, user.password);
   }
@@ -89,13 +89,13 @@ export default function Login() {
       .then((response: any) => {
         if (isMounted()) {
           setWaiting(false);
-          if (response.data.data) {
-            var userInfo = response.data.data;
+          var userInfo = response.data.data.data;
+          if (userInfo) {
             var token = userInfo.token;
             console.log(token);
             var decoded = atob(userInfo.token)
             if (decoded === username + password) {
-              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId));
+              setUser(new User(userInfo.name, userInfo.password, true, userInfo.token, userInfo.email, userInfo.gender, userInfo.userId, userInfo.usersettings));
               history.push("/");
             }
           } else {
