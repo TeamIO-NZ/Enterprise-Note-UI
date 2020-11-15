@@ -28,7 +28,7 @@ export default function NoteShareGroup({ note }: { note: Note }) {
       console.log(`user:${users[0].name}`)
       return (
 
-        <AvatarGroup max={4}>
+        <AvatarGroup max={4} classes={{avatar: classes.avatar}}>
           {
             users.map((u: User) => React.cloneElement(
               <Tooltip title={u.name}>
